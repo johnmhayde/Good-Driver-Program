@@ -12,7 +12,18 @@
 		<title></title>
 	</head>
 	<body>
-		{% block content %}{% endblock %}
+		<div class="container col-md-8">
+			<!-- Display any messages -->
+			{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endif %}
+			<!-- Container for page content -->
+			{% block content %}{% endblock %}
+		</div>
 		<!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
