@@ -7,3 +7,6 @@ def home(request):
 
 def register(request):
 	return render(request, 'portal/register.html')
+
+def driver_home(request):
+	return render(request, 'portal/driver_home.html')

@@ -12,9 +12,15 @@ class UserRegistrationForm(forms.ModelForm):
 	password = forms.CharField(label = 'Password')
 	password2 = forms.CharField(label = 'Password Verification')
 
-	# overwrite the clean for password validation
+	# overwrite the clean for username and password validation
 	def clean(self):
 		cleaned_data = self.cleaned_data
+		try:
+			result = Driver.objects.get(username = cleaned_data.get('username'))
+			if result != None:
+				raise forms.ValidationError('A user already exists with that username')
+		except Driver.DoesNotExist:
+			pass
 		password1 = cleaned_data.get('password')
 		password2 = cleaned_data.get('password2')
 		if password1 != password2:

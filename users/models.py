@@ -6,7 +6,7 @@ class GenericUser(models.Model):
 	password = models.CharField(max_length=30)
 	type = models.CharField(max_length=15)
 
-# Model for Driver Table - this is missing some fields, will have to f=decide how to fill out later
+# Model for Driver Table - this is missing some fields, will have to decide how to fill out later
 class Driver(models.Model):
 	username = models.CharField(max_length=30)
 	password = models.CharField(max_length=30)
