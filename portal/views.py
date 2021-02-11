@@ -12,8 +12,8 @@ def register(request):
 
 def driver_home(request):
 	# send driver info to page
-	user = User
-	driver = Driver.objects.get(username='jhayde43')
+	user = request.user
+	driver = Driver.objects.get(username=user.username)
 	data = {
 	"points" : driver.points
 	}
