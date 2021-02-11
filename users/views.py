@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegistrationForm
 from .models import GenericUser
+from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 # register new user with form input if form is valid
 def register(request):
@@ -17,6 +19,9 @@ def register(request):
 			new_user.save()
 			# save user info to Driver table
 			form.save()
+			# register info with user table and log them in
+			user = User.objects.create_user(form.cleaned_data.get('username'), form.cleaned_data.get('email'), form.cleaned_data.get('password'))
+			login(request, user)
 			username = form.cleaned_data.get('username')
 			messages.success(request, f'Account created for {username}')
 			return redirect('driver-home')
