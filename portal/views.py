@@ -18,3 +18,6 @@ def driver_home(request):
 	"points" : driver.points
 	}
 	return render(request, 'portal/driver_home.html', data)
+
+def sponsor_home(request):
+	return render(request, 'portal/home.html')

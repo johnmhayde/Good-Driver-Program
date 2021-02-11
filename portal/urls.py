@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     path('', views.home, name='portal-home'),
 	path('register/', views.register, name='register-user'),
-	path('driver_home/', views.driver_home, name='driver-home')
+	path('driver_home/', views.driver_home, name='driver-home'),
+    path('sponsor_home/', views.sponsor_home, name='sponsor-home')
 ]
