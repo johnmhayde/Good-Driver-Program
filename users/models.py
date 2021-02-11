@@ -15,3 +15,4 @@ class Driver(models.Model):
 	phone_num = models.CharField(max_length=15)
 	email = models.CharField(max_length=30)
 	address = models.CharField(max_length=50)
+	points = models.IntegerField(default=0)

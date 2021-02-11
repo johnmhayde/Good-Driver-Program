@@ -3,7 +3,7 @@ from .models import Driver, GenericUser
 
 class AdminDriver(admin.ModelAdmin):
 	model = Driver
-	list_display = ('username', 'first_name', 'last_name', 'phone_num', 'email', 'address')
+	list_display = ('username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'points')
 
 class AdminGenericUser(admin.ModelAdmin):
 	model = GenericUser
