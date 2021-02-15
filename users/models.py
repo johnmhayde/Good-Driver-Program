@@ -24,4 +24,6 @@ class Sponsor(models.Model):
 	last_name = models.CharField(max_length=30)
 	email = models.CharField(max_length=30)
 	sponsor_company = models.CharField(max_length=30)
-	# driver list
+	# driver list for each instance of sponsor
+	# this is basically an array of the strings used in above functions.
+	drivers_list_usernames = models.ArrayField(models.CharField(max_length=30), blank=True)
