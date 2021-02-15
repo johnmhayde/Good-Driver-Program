@@ -20,8 +20,8 @@ def home(request):
 	return response
 	#return render(request, 'portal/home.html')
 
-def portal_home(request):
-	return render(request, 'portal/home.html')
+# def portal_home(request):
+# 	return render(request, 'portal/home.html')
 
 def register(request):
 	return render(request, 'portal/register.html')
