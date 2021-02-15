@@ -1,5 +1,25 @@
 {% extends "portal/base.html" %}
 {% block content %}
-	<h1>Home Page!</h1>
-    
-{% endblock content%}
+	<div class="row">
+		<div class="col-md-12 d-flex justify-content-center">
+			<h1>Sponsor Home</h1>
+			<!-- TODO: WANT TO ADD IN SPONSOR NAME HERE, SOME KIND OF WELCOME MESSAGE WOULD BE NICE -->
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="media-heading">
+				<h2 class="account-heading">{{ user.username }}</h2>
+				<p class="text-secondary">{{ user.email }}</p>
+				<p class="text-secondary">{{ user.first_name }}</p>
+				<p class="text-secondary">{{ user.last_name }}</p>
+				<!-- TODO: how do i print this array of names? this may work but im honestly not sure.  -->
+				<p class="text-secondary">{{ user.drivers_list_usernames }} drivers_list_usernames</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- For Adding A new driver... Does admin have to do this or can a sponsor??? -->
+	
+{% endblock content%}	
