@@ -3,7 +3,8 @@ from . import views
 
 # list of URL's for this app
 urlpatterns = [
-    path('', views.home, name='portal-home'),
+    path('', views.portal_home, name="portal_home"),
+    path('login-routing/', views.home, name='home'),
 	path('register/', views.register, name='register-user'),
 	path('driver_home/', views.driver_home, name='driver-home'),
     path('sponsor_home/', views.sponsor_home, name='sponsor-home')
