@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Model for the User Table - all users will be stored in here and this table will be checked on login
 class GenericUser(models.Model):
@@ -26,4 +27,12 @@ class Sponsor(models.Model):
 	sponsor_company = models.CharField(max_length=30)
 	# driver list for each instance of sponsor
 	# this is basically an array of the strings used in above functions.
-	drivers_list_usernames = models.ArrayField(models.CharField(max_length=30), blank=True)
+	drivers_list_usernames = ArrayField(models.CharField(max_length=30), blank=True)
+
+class Product(models.Model):
+	name = models.CharField(max_length=50)
+	stock = models.IntegerField(default=1)
+	price = models.IntegerField(default=1)
+	desc = models.CharField(max_length=2000)
+	#images???
+	idNum = models.IntegerField(default=1)
