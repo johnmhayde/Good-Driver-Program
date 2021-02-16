@@ -33,3 +33,11 @@ class PointHist(models.Model):
 	date = models.CharField(max_length=30)
 	points = models.IntegerField(default=0)
 	reason = models.CharField(max_length=300)
+
+class Product(models.Model):
+	name = models.CharField(max_length=50)
+	stock = models.IntegerField(default=1)
+	price = models.IntegerField(default=1)
+	desc = models.CharField(max_length=2000)
+	#images???
+	idNum = models.IntegerField(default=1)
