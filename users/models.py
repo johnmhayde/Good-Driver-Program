@@ -25,14 +25,11 @@ class Sponsor(models.Model):
 	last_name = models.CharField(max_length=30)
 	email = models.CharField(max_length=30)
 	sponsor_company = models.CharField(max_length=30)
-	# driver list for each instance of sponsor
-	# this is basically an array of the strings used in above functions.
 	drivers_list_usernames = ArrayField(models.CharField(max_length=30), blank=True)
 
-class Product(models.Model):
-	name = models.CharField(max_length=50)
-	stock = models.IntegerField(default=1)
-	price = models.IntegerField(default=1)
-	desc = models.CharField(max_length=2000)
-	#images???
-	idNum = models.IntegerField(default=1)
+class PointHist(models.Model):
+	username = models.CharField(max_length=30)
+	sponsor_username = models.CharField(max_length=30)
+	date = models.CharField(max_length=30)
+	points = models.IntegerField(default=0)
+	reason = models.CharField(max_length=300)

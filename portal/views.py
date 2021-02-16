@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from users.models import Driver
+from users.models import Driver, PointHist
 from users.models import Sponsor
 from users.models import GenericUser
 from django.shortcuts import redirect
@@ -30,8 +30,14 @@ def driver_home(request):
 	# send driver info to page
 	user = request.user
 	driver = Driver.objects.get(username=user.username)
+	# send point history to page
+	try:
+		point_hist = PointHist.objects.filter(username=user.username)
+	except PointHist.DoesNotExist:
+		point_hist = None
 	data = {
-	"points" : driver.points
+	"points" : driver.points,
+	"point_hist" : point_hist
 	}
 	return render(request, 'portal/driver_home.html', data)
 
