@@ -24,7 +24,7 @@ class Sponsor(models.Model):
 	last_name = models.CharField(max_length=30)
 	email = models.CharField(max_length=30)
 	sponsor_company = models.CharField(max_length=30)
-	# driver list
+	drivers_list_usernames = models.ArrayField(models.CharField(max_length=30), blank=True)
 
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)
