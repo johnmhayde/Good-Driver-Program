@@ -44,11 +44,11 @@ def driver_home(request):
 def sponsor_home(request):
 	# Assign the sponsor user data to the user var
 	user = request.user
-	# Get the sponsor username 
+	# Get the sponsor username
 	sponsor = Sponsor.objects.get(username=user.username)
 	data = {
-		"drivers" : sponsor.drivers_list_usernames
+		# "drivers" : sponsor.drivers_list_usernames
 		# Will use driver usernames to access driver points
 	}
 
-	return render(request, 'portal/sponsor_home.html')
+	return render(request, 'portal/sponsor_home.html', data)

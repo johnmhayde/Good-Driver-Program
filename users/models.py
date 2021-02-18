@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+# from django.contrib.postgres.fields import ArrayField
 
 # Model for the User Table - all users will be stored in here and this table will be checked on login
 class GenericUser(models.Model):
@@ -25,7 +25,7 @@ class Sponsor(models.Model):
 	last_name = models.CharField(max_length=30)
 	email = models.CharField(max_length=30)
 	sponsor_company = models.CharField(max_length=30)
-	drivers_list_usernames = ArrayField(models.CharField(max_length=30), blank=True)
+	# drivers_list_usernames = ArrayField(models.CharField(max_length=30), blank=True)
 
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)
