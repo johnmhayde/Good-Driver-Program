@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from users.models import Driver, PointHist
 from users.models import Sponsor
+from users.models import Admin
 from users.models import GenericUser
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -15,6 +16,8 @@ def home(request):
 		response = redirect('driver-home')
 	elif userType == 'Sponsor':
 		response = redirect('sponsor-home')
+	elif userType == 'Admin':
+		response = redirect('admin-home')
 	else:
 		response = redirect('logout')
 	return response
@@ -52,3 +55,5 @@ def sponsor_home(request):
 	}
 
 	return render(request, 'portal/sponsor_home.html', data)
+def admin_home(request):
+	return render(request, 'admin/')
