@@ -39,8 +39,12 @@ def driver_home(request):
 	except PointHist.DoesNotExist:
 		point_hist = None
 	data = {
-	"points" : driver.points,
-	"point_hist" : point_hist
+	'points' : driver.points,
+	'point_hist' : point_hist,
+	'first_name' : driver.first_name,
+	'last_name' : driver.last_name,
+	'phone_num' : driver.phone_num,
+	'address' : driver.address
 	}
 	return render(request, 'portal/driver_home.html', data)
 

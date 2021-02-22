@@ -88,3 +88,11 @@ class AdminRegistrationForm(forms.ModelForm):
 	class Meta:
 		model = Admin
 		fields = ['username', 'first_name', 'last_name',  'email', 'password']
+
+# form for Driver Editing profile
+class DriverUpdateFrom(forms.ModelForm):
+	model = Driver
+	# deliver only editable content to the page
+	class Meta:
+		model = Driver
+		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address']
