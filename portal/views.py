@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from users.models import Driver, PointHist
 from users.models import Sponsor
-from users.models import Admin
+from users.models import GenericAdmin
 from users.models import GenericUser
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -44,8 +44,13 @@ def driver_home(request):
 	'first_name' : driver.first_name,
 	'last_name' : driver.last_name,
 	'phone_num' : driver.phone_num,
-	'address' : driver.address
+	'address' : driver.address,
+
+	# ADDED
+	'sponsor' : driver.sponsor
+
 	}
+
 	return render(request, 'portal/driver_home.html', data)
 
 def sponsor_home(request):
@@ -53,11 +58,25 @@ def sponsor_home(request):
 	user = request.user
 	# Get the sponsor username
 	sponsor = Sponsor.objects.get(username=user.username)
-	data = {
-		# "drivers" : sponsor.drivers_list_usernames
-		# Will use driver usernames to access driver points
-	}
 
+	try:
+		my_drivers = Driver.objects.filter(sponsor=user.username)
+	except Driver.DoesNotExist:
+		my_drivers = None
+
+	data = {
+		'first_name' : sponsor.first_name,
+		'last_name' : sponsor.last_name,
+		'phone_num' : sponsor.phone_num,
+		'address' : sponsor.address,
+		'email' : sponsor.email,
+		# Get rid of this variable, later.
+		'sponsor_company' : sponsor.sponsor_company,
+		# This will access all of the drivers assigned to the sponsors. 
+		'my_drivers' : my_drivers
+	}
 	return render(request, 'portal/sponsor_home.html', data)
+
+
 def admin_home(request):
 	return render(request, 'admin/')

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Driver, GenericUser, Sponsor, PointHist, Admin
+from .models import Driver, GenericUser, Sponsor, PointHist, GenericAdmin
 
 class AdminDriver(admin.ModelAdmin):
 	model = Driver
@@ -14,7 +14,7 @@ class AdminSponsor(admin.ModelAdmin):
 	list_display = ('username', 'first_name', 'last_name', 'email', 'sponsor_company')
 
 class AdminAdmin(admin.ModelAdmin):
-	model = Admin
+	model = GenericAdmin
 	list_display = ('username', 'first_name', 'last_name', 'email')
 class AdminPointHist(admin.ModelAdmin):
 	model = PointHist
@@ -24,4 +24,4 @@ admin.site.register(Driver, AdminDriver)
 admin.site.register(GenericUser, AdminGenericUser)
 admin.site.register(Sponsor, AdminSponsor)
 admin.site.register(PointHist, AdminPointHist)
-admin.site.register(Admin, AdminAdmin)
+admin.site.register(GenericAdmin, AdminAdmin)

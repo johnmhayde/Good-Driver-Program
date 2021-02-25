@@ -17,23 +17,26 @@ class Driver(models.Model):
 	email = models.CharField(max_length=30)
 	address = models.CharField(max_length=50)
 	points = models.IntegerField(default=0)
-
-class Admin(models.Model):
+	# ADDED 
+	sponsor = models.CharField(max_length=50, default = "")
+	
+# Changed name of admin to avoid error thrown during migration
+class GenericAdmin(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=30)
     email = models.CharField(max_length=30)
 
-
 class Sponsor(models.Model):
 	username = models.CharField(max_length=30)
 	password = models.CharField(max_length=30)
 	first_name = models.CharField(max_length=20)
 	last_name = models.CharField(max_length=30)
-	email = models.CharField(max_length=30)
-	sponsor_company = models.CharField(max_length=30)
-	# drivers_list_usernames = ArrayField(models.CharField(max_length=30), blank=True)
+	phone_num = models.CharField(max_length=15, default = "")
+	email = models.CharField(max_length=30, default = "")
+	address = models.CharField(max_length=50, default = "")
+	sponsor_company = models.CharField(max_length=30, default = "")
 
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)

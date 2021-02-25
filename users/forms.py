@@ -1,5 +1,5 @@
 from django import forms
-from .models import Driver, Sponsor,Admin
+from .models import Driver, Sponsor,GenericAdmin
 
 # create a custom form for the Driver Model
 class UserRegistrationForm(forms.ModelForm):
@@ -73,10 +73,10 @@ class AdminRegistrationForm(forms.ModelForm):
 	def clean(self):
 		cleaned_data = self.cleaned_data
 		try:
-			result = Admin.objects.get(username = cleaned_data.get('username'))
+			result = GenericAdmin.objects.get(username = cleaned_data.get('username'))
 			if result != None:
 				raise forms.ValidationError('A user already exists with that username')
-		except Admin.DoesNotExist:
+		except GenericAdmin.DoesNotExist:
 			pass
 		password1 = cleaned_data.get('password')
 		password2 = cleaned_data.get('password2')
@@ -86,7 +86,7 @@ class AdminRegistrationForm(forms.ModelForm):
 
 		# deliver the proper model to the database
 	class Meta:
-		model = Admin
+		model = GenericAdmin
 		fields = ['username', 'first_name', 'last_name',  'email', 'password']
 
 # form for Driver Editing profile
