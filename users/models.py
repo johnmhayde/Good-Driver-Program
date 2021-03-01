@@ -17,9 +17,10 @@ class Driver(models.Model):
 	email = models.CharField(max_length=30)
 	address = models.CharField(max_length=50)
 	points = models.IntegerField(default=0)
-	# ADDED 
+	# ADDED
 	sponsor = models.CharField(max_length=50, default = "")
-	
+	profile_photo = models.ImageField(default='default.jpg', upload_to='profile_photos')
+
 # Changed name of admin to avoid error thrown during migration
 class GenericAdmin(models.Model):
     username = models.CharField(max_length=30)

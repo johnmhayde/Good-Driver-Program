@@ -45,6 +45,7 @@ def driver_home(request):
 	'last_name' : driver.last_name,
 	'phone_num' : driver.phone_num,
 	'address' : driver.address,
+	'profile_photo' : driver.profile_photo.url,
 
 	# ADDED
 	'sponsor' : driver.sponsor
@@ -72,7 +73,7 @@ def sponsor_home(request):
 		'email' : sponsor.email,
 		# Get rid of this variable, later.
 		'sponsor_company' : sponsor.sponsor_company,
-		# This will access all of the drivers assigned to the sponsors. 
+		# This will access all of the drivers assigned to the sponsors.
 		'my_drivers' : my_drivers
 	}
 	return render(request, 'portal/sponsor_home.html', data)
