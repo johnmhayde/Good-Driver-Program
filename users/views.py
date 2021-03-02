@@ -56,7 +56,7 @@ def register_sponsor(request):
 def update_driver_info(request):
 	if request.method == 'POST':
 		driver = Driver.objects.get(username=request.user.username)
-		driver_form = DriverUpdateFrom(request.POST, instance=driver)
+		driver_form = DriverUpdateFrom(request.POST, request.FILES, instance=driver)
 		if driver_form.is_valid():
 			driver_form.save()
 			messages.success(request, f'Your account has been updated')

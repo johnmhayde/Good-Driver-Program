@@ -26,7 +26,8 @@ SECRET_KEY = 'c2z)o(scoexds@eh2me!sx7#o-j@y25x3olpi=f2mfb_ayql=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'good-driver-program-dev.us-east-1.elasticbeanstalk.com']
+
 
 # Application definition
 
@@ -138,7 +139,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "static"
+STATIC_ROOT = 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
