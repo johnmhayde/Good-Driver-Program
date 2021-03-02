@@ -1,4 +1,5 @@
 from django.db import models
+from PIL import Image
 # from django.contrib.postgres.fields import ArrayField
 
 # Model for the User Table - all users will be stored in here and this table will be checked on login
@@ -20,6 +21,14 @@ class Driver(models.Model):
 	# ADDED
 	sponsor = models.CharField(max_length=50, default = "")
 	profile_photo = models.ImageField(default='default.jpg', upload_to='profile_photos')
+
+	def save(self):
+		super().save()
+		image = Image.open(self.profile_photo.path)
+		if image.height > 300 or image.width > 300:
+			output_size = (300, 300)
+			image.thumbnail(output_size)
+			image.save(self.profile_photo.path)
 
 # Changed name of admin to avoid error thrown during migration
 class GenericAdmin(models.Model):
