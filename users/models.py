@@ -22,14 +22,6 @@ class Driver(models.Model):
 	sponsor = models.CharField(max_length=50, default = "")
 	profile_photo = models.ImageField(default='default.jpg', upload_to='profile_photos')
 
-	def save(self):
-		super().save()
-		image = Image.open(self.profile_photo.path)
-		if image.height > 300 or image.width > 300:
-			output_size = (300, 300)
-			image.thumbnail(output_size)
-			image.save(self.profile_photo.path)
-
 # Changed name of admin to avoid error thrown during migration
 class GenericAdmin(models.Model):
     username = models.CharField(max_length=30)
