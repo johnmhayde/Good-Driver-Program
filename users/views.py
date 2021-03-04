@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom
-from .models import GenericUser, Driver
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm
+from .models import GenericUser, Driver, Sponsor
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 
@@ -69,3 +69,23 @@ def update_driver_info(request):
 	}
 
 	return render(request, 'users/edit_info.html', context)
+
+# view for editing sponsor profile information
+def update_sponsor_info(request):
+	if request.method == 'POST':
+		sponsor = Sponsor.objects.get(username=request.user.username)
+		sponsor_form = SponsorUpdateForm(request.POST, request.FILES, instance=sponsor)
+		if sponsor_form.is_valid():
+			sponsor_form.save()
+			messages.success(request, f'Your account has been updated')
+			return redirect('sponsor-home')
+	else:
+		sponsor = Sponsor.objects.get(username=request.user.username)
+		sponsor_form = SponsorUpdateForm(instance=Sponsor)
+	context = {
+		'sponsor_form' : sponsor_form
+	}
+
+	return render(request, 'users/edit_sponsor_info.html', context)
+
+

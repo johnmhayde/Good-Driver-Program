@@ -47,6 +47,8 @@ class Sponsor(models.Model):
 	email = models.CharField(max_length=30, default = "")
 	address = models.CharField(max_length=50, default = "")
 	sponsor_company = models.CharField(max_length=30, default = "")
+	security_question = models.CharField(max_length=60)
+	security_answer = models.CharField(max_length=60)
 
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)
