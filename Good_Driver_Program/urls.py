@@ -12,7 +12,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
 	path('', include('portal.urls')),
-    path('edit_info/', user_views.update_driver_info, name="update-info")
+    path('edit_info/', user_views.update_driver_info, name="update-info"),
+    path('edit_sponsor_info/', user_views.update_sponsor_info, name="update-sponsor-info")
 ]
 
 # urlpatterns += staticfiles_urlpatterns()

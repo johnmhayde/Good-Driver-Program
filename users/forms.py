@@ -1,9 +1,10 @@
 from django import forms
-from .models import Driver, Sponsor,GenericAdmin
+from .models import Driver, Sponsor, GenericAdmin
 
 # create a custom form for the Driver Model
 class UserRegistrationForm(forms.ModelForm):
 	username = forms.CharField(label = 'Username')
+	sponsor = forms.CharField(label = 'Sponsor', required=False)
 	first_name = forms.CharField(label = 'First Name')
 	last_name = forms.CharField(label = 'Last Name')
 	email = forms.EmailField()
@@ -21,16 +22,23 @@ class UserRegistrationForm(forms.ModelForm):
 				raise forms.ValidationError('A user already exists with that username')
 		except Driver.DoesNotExist:
 			pass
+
+		try:
+			check = Sponsor.objects.get(username = cleaned_data.get('sponsor'))
+			if check == None:
+				raise forms.ValidationError('No sponsor exists with this username')
+		except ValueError:
+			pass
 		password1 = cleaned_data.get('password')
 		password2 = cleaned_data.get('password2')
 		if password1 != password2:
 			raise forms.ValidationError('Passwords Must Match')
-		return cleaned_data
 
+		return cleaned_data
 		# deliver the proper model to the database
 	class Meta:
 		model = Driver
-		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'password']
+		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'sponsor', 'password']
 
 # Driver Registration Form
 class SponsorRegistrationForm(forms.ModelForm):
@@ -41,6 +49,8 @@ class SponsorRegistrationForm(forms.ModelForm):
 		sponsor_company = forms.CharField(label = 'Company Name')
 		password = forms.CharField(label = 'Password')
 		password2 = forms.CharField(label = 'Password Verification')
+		security_question = forms.CharField(label = 'Account Recovery Security Question')
+		security_answer = forms.CharField(label = 'Account Recovery Security Answer')
 
 		# overwrite the clean for username and password validation
 		def clean(self):
@@ -60,7 +70,7 @@ class SponsorRegistrationForm(forms.ModelForm):
 			# deliver the proper model to the database
 		class Meta:
 			model = Sponsor
-			fields = ['username', 'first_name', 'last_name', 'email', 'sponsor_company', 'password']
+			fields = ['username', 'first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
 class AdminRegistrationForm(forms.ModelForm):
 	username = forms.CharField(label = 'Username')
 	first_name = forms.CharField(label = 'First Name')
@@ -96,3 +106,11 @@ class DriverUpdateFrom(forms.ModelForm):
 	class Meta:
 		model = Driver
 		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo']
+
+# form for Sponsor Editing profile
+class SponsorUpdateForm(forms.ModelForm):
+	model = Sponsor
+	# deliver only editable content to the page
+	class Meta:
+		model = Sponsor
+		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']   

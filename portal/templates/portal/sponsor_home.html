@@ -2,20 +2,34 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12 d-flex justify-content-center">
-			<h1>Sponsor Home</h1>
+			<h1 style="text-decoration: underline;">Sponsor Home</h1>
 			<!-- TODO: WANT TO ADD IN SPONSOR NAME HERE, SOME KIND OF WELCOME MESSAGE WOULD BE NICE -->
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
-			<div class="media-heading">
-				<h2 class="account-heading">{{ user.username }}</h2>
-				<p class="text-secondary">{{ user.email }}</p>
-				<p class="text-secondary">{{ user.first_name }}</p>
-				<p class="text-secondary">{{ user.last_name }}</p>
+		<div class="col-md-5">
+			<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
+			<div class="content-section">
+				<div class="media-heading">
+					<p class="text-secondary"><b>Email</b>: {{ email }}</p>
+					<p class="text-secondary"><b>First</b>: {{ first_name }}</p>
+					<p class="text-secondary"><b>Last</b>: {{ last_name }}</p>
+					<p class="text-secondary"><b>Company</b>: {{ sponsor_company }}</p>
+					<a href="{% url 'update-sponsor-info' %}">Edit Profile Information</a>
+				</div>
 				<!-- TODO: how do i print this array of names? this may work but im honestly not sure.  -->
 				<!-- <p class="text-secondary">{{ user.drivers_list_usernames }} drivers_list_usernames</p> -->
+			</div>
+		</div>
+
+		<div class="col-md-5">
+			<h2 class="account-heading">Drivers</h2>
+			<div class="content-section">
+				<div class="media-heading">
+					<h5 class="text-secondary">Current Drivers:</h5>
+					<p class="text-secondary"> {{ my_drivers }}<p>
+				</div>
 			</div>
 		</div>
 	</div>
