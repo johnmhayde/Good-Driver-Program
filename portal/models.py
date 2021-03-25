@@ -16,6 +16,11 @@ class UserLogout(models.Model):
 	date = models.DateField(auto_now_add=True)
 	time = models.TimeField(auto_now_add=True)
 
+class UserEditInfo(models.Model):
+	username = models.CharField(max_length=30)
+	date = models.DateField(auto_now_add=True)
+	time = models.TimeField(auto_now_add=True)
+
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
 	UserLogin.objects.create(username=user.username, date = "Today", time = "", success="true")
