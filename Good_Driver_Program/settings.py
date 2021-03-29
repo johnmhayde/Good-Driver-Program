@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-# import os
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +26,7 @@ SECRET_KEY = 'c2z)o(scoexds@eh2me!sx7#o-j@y25x3olpi=f2mfb_ayql=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'good-driver-program-dev.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['good-driver-program-development.us-east-1.elasticbeanstalk.com']
 
 
 # Application definition
