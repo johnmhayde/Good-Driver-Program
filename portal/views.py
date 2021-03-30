@@ -6,6 +6,7 @@ from users.models import GenericAdmin
 from users.models import GenericUser
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+# from portal.models import UserLogin
 
 # send user to homepage
 def home(request):
@@ -20,6 +21,13 @@ def home(request):
 		response = redirect('admin-home')
 	else:
 		response = redirect('logout')
+	# # log login attempt
+	# login_attempt = UserLogin(
+	# 	username = user.username,
+	# 	date= "Today",
+	# 	success = "true"
+	# )
+	# login_attempt.save()
 	return response
 	#return render(request, 'portal/home.html')
 

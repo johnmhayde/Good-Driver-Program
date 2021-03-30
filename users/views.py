@@ -4,6 +4,7 @@ from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFr
 from .models import GenericUser, Driver, Sponsor
 from django.contrib.auth.models import User
 from django.contrib.auth import login
+from portal.models import UserEditInfo
 
 # register new user with form input if form is valid
 def register(request):
@@ -59,6 +60,7 @@ def update_driver_info(request):
 		driver_form = DriverUpdateFrom(request.POST, request.FILES, instance=driver)
 		if driver_form.is_valid():
 			driver_form.save()
+			UserEditInfo.objects.create(username=driver.username, date = "Today", time = "")
 			messages.success(request, f'Your account has been updated')
 			return redirect('driver-home')
 	else:
@@ -87,5 +89,3 @@ def update_sponsor_info(request):
 	}
 
 	return render(request, 'users/edit_sponsor_info.html', context)
-
-
