@@ -95,11 +95,21 @@ WSGI_APPLICATION = 'Good_Driver_Program.wsgi.application'
 # 	        'NAME': BASE_DIR / 'db.sqlite3',
 # 	    }
 # 	}
+# DATABASES = {
+# 	'default': {
+# 	    'ENGINE': 'django.db.backends.sqlite3',
+# 	    'NAME': BASE_DIR / 'db.sqlite3',
+# 	}
+# }
 DATABASES = {
-	'default': {
-	    'ENGINE': 'django.db.backends.sqlite3',
-	    'NAME': BASE_DIR / 'db.sqlite3',
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '4910_proj',
+        'USER': 'root',
+        'PASSWORD': 'johnmichael06',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
 }
 
 # Password validation
