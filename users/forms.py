@@ -4,7 +4,6 @@ from .models import Driver, Sponsor, GenericAdmin, Application
 # create a custom form for the Driver Model
 class UserRegistrationForm(forms.ModelForm):
 	username = forms.CharField(label = 'Username')
-	sponsor = forms.CharField(label = 'Sponsor', required=False)
 	first_name = forms.CharField(label = 'First Name')
 	last_name = forms.CharField(label = 'Last Name')
 	email = forms.EmailField()
@@ -22,13 +21,6 @@ class UserRegistrationForm(forms.ModelForm):
 				raise forms.ValidationError('A user already exists with that username')
 		except Driver.DoesNotExist:
 			pass
-
-		try:
-			check = Sponsor.objects.get(username = cleaned_data.get('sponsor'))
-			if check == None:
-				raise forms.ValidationError('No sponsor exists with this username')
-		except ValueError:
-			pass
 		password1 = cleaned_data.get('password')
 		password2 = cleaned_data.get('password2')
 		if password1 != password2:
@@ -38,7 +30,7 @@ class UserRegistrationForm(forms.ModelForm):
 		# deliver the proper model to the database
 	class Meta:
 		model = Driver
-		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'sponsor', 'password']
+		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'password']
 
 # Driver Registration Form
 class SponsorRegistrationForm(forms.ModelForm):
