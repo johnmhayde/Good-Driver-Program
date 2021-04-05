@@ -107,7 +107,7 @@ DATABASES = {
         'NAME': '4910_proj',
         'USER': 'root',
         'PASSWORD': 'johnmichael06',
-        'HOST': 'a13l4dnyixe3cu.crcluxn1qu4c.us-east-1.rds.amazonaws.com',
+        'HOST': 'aa13l4dnyixe3cu.crcluxn1qu4c.us-east-1.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
