@@ -26,7 +26,7 @@ SECRET_KEY = 'c2z)o(scoexds@eh2me!sx7#o-j@y25x3olpi=f2mfb_ayql=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['good-driver-program.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['Good-Driver-Program-dev.us-east-1.elasticbeanstalk.com']
 
 
 # Application definition
@@ -107,7 +107,7 @@ DATABASES = {
         'NAME': '4910_proj',
         'USER': 'root',
         'PASSWORD': 'johnmichael06',
-        'HOST': 'aa13l4dnyixe3cu.crcluxn1qu4c.us-east-1.rds.amazonaws.com',
+        'HOST': 'aa63pqw414mzc2.crcluxn1qu4c.us-east-1.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
