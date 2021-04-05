@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm ApplicationForm
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm
 from .models import GenericUser, Driver, Sponsor, Application
 from django.contrib.auth.models import User
 from django.contrib.auth import login
