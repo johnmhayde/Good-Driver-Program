@@ -1,5 +1,5 @@
 from django import forms
-from .models import Driver, Sponsor, GenericAdmin
+from .models import Driver, Sponsor, GenericAdmin, Application
 
 # create a custom form for the Driver Model
 class UserRegistrationForm(forms.ModelForm):
@@ -113,4 +113,7 @@ class SponsorUpdateForm(forms.ModelForm):
 	# deliver only editable content to the page
 	class Meta:
 		model = Sponsor
-		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']   
+		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
+
+class ApplicationForm(forms.Form):
+	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor.username,sponsor.sponsor_company]) for sponsor in Sponsor.objects.all()])

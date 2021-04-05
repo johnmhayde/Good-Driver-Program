@@ -4,6 +4,7 @@ from users.models import Driver, PointHist
 from users.models import Sponsor
 from users.models import GenericAdmin
 from users.models import GenericUser
+from users.models import Application
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 # from portal.models import UserLogin
@@ -46,6 +47,11 @@ def driver_home(request):
 		point_hist = PointHist.objects.filter(username=user.username)
 	except PointHist.DoesNotExist:
 		point_hist = None
+	# send application data to page
+	try:
+		applications = Application.objects.filter(driver=user.username)
+	except Application.DoesNotExist:
+		applications = None
 	data = {
 	'points' : driver.points,
 	'point_hist' : point_hist,
@@ -54,7 +60,7 @@ def driver_home(request):
 	'phone_num' : driver.phone_num,
 	'address' : driver.address,
 	'profile_photo' : driver.profile_photo.url,
-
+	'applications' : applications,
 	# ADDED
 	'sponsor' : driver.sponsor
 
@@ -72,6 +78,11 @@ def sponsor_home(request):
 		my_drivers = Driver.objects.filter(sponsor=user.username)
 	except Driver.DoesNotExist:
 		my_drivers = None
+	# get applications
+	try:
+		applications = Application.objects.filter(sponsor=user.username)
+	except Application.DoesNotExist:
+		applications = None
 
 	data = {
 		'first_name' : sponsor.first_name,
@@ -82,7 +93,8 @@ def sponsor_home(request):
 		# Get rid of this variable, later.
 		'sponsor_company' : sponsor.sponsor_company,
 		# This will access all of the drivers assigned to the sponsors.
-		'my_drivers' : my_drivers
+		'my_drivers' : my_drivers,
+		'applications' : applications
 	}
 	return render(request, 'portal/sponsor_home.html', data)
 

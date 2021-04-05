@@ -1,6 +1,6 @@
 from django.db import models
 from PIL import Image
-# from django.contrib.postgres.fields import ArrayField
+from datetime import datetime
 
 # Model for the User Table - all users will be stored in here and this table will be checked on login
 class GenericUser(models.Model):
@@ -56,3 +56,10 @@ class Product(models.Model):
 	desc = models.CharField(max_length=2000)
 	#images???
 	idNum = models.IntegerField(default=1)
+
+class Application(models.Model):
+	driver = models.CharField(max_length=30)
+	sponsor = models.CharField(max_length=30)
+	sponsor_company = models.CharField(max_length=30, default="")
+	date = models.DateField(auto_now_add=True)
+	status = models.CharField(max_length=10)

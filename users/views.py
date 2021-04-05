@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm
-from .models import GenericUser, Driver, Sponsor
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm
+from .models import GenericUser, Driver, Sponsor, Application
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from portal.models import UserEditInfo
@@ -89,3 +89,19 @@ def update_sponsor_info(request):
 	}
 
 	return render(request, 'users/edit_sponsor_info.html', context)
+
+def application(request):
+	if request.method == 'POST':
+		application_form = ApplicationForm(request.POST)
+		if application_form.is_valid():
+			sponsor = application_form.cleaned_data.get('sponsor')
+			sponsor_company = Sponsor.objects.get(username=sponsor)
+			application = Application.objects.create(driver=request.user.username, sponsor=sponsor, sponsor_company=sponsor_company.sponsor_company, status="Pending")
+			application.save()
+			return redirect('driver-home')
+	else:
+		application_form = ApplicationForm()
+	context = {
+		'application_form' : application_form,
+	}
+	return render(request, 'users/application.html', context)

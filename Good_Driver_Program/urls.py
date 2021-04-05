@@ -13,7 +13,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
 	path('', include('portal.urls')),
     path('edit_info/', user_views.update_driver_info, name="update-info"),
-    path('edit_sponsor_info/', user_views.update_sponsor_info, name="update-sponsor-info")
+    path('edit_sponsor_info/', user_views.update_sponsor_info, name="update-sponsor-info"),
+    path('application/', user_views.application, name="apply")
 ]
 
 # urlpatterns += staticfiles_urlpatterns()
