@@ -21,5 +21,7 @@ Handles the user login and information processing logic.
 `yum install mysql-devel`\
 `pip install mysqlclient`\
 `pip install pillow`\
+`pip install django`\
+`pip install django-crispy-forms`\
 `python3 manage.py makemigrations`\
 `python3 manage.py migrate`
