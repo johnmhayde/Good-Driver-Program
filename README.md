@@ -22,4 +22,4 @@ Handles the user login and information processing logic.
 `pip install mysqlclient`\
 `pip install pillow`\
 `python3 manage.py makemigrations`\
-`python3 manage.py migrate`\
+`python3 manage.py migrate`
