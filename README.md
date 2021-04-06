@@ -17,9 +17,9 @@ Portal is the main web app, handles displaying info and such after login.
 Handles the user login and information processing logic.
 
 ### Server Requirements and Migrations
-`yum install python-devel`
-`yum install mysql-devel`
-`pip install mysqlclient`
-`pip install pillow`
-`python3 manage.py makemigrations`
-`python3 manage.py migrate`
+`yum install python-devel`\
+`yum install mysql-devel`\
+`pip install mysqlclient`\
+`pip install pillow`\
+`python3 manage.py makemigrations`\
+`python3 manage.py migrate`\
