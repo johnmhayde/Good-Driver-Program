@@ -1,6 +1,7 @@
 from django.db import models
 from PIL import Image
 from datetime import datetime
+from django_resized import ResizedImageField
 
 # Model for the User Table - all users will be stored in here and this table will be checked on login
 class GenericUser(models.Model):
@@ -20,7 +21,7 @@ class Driver(models.Model):
 	points = models.IntegerField(default=0)
 	# ADDED
 	sponsor = models.CharField(max_length=50, default = "")
-	profile_photo = models.ImageField(default='default.jpg', upload_to='profile_photos')
+	profile_photo = ResizedImageField(quality=50, default='default.jpg', upload_to='profile_photos')
 
 # Changed name of admin to avoid error thrown during migration
 class GenericAdmin(models.Model):

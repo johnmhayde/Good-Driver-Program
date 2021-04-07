@@ -1,5 +1,6 @@
 from django import forms
 from .models import Driver, Sponsor, GenericAdmin, Application
+from PIL import Image
 
 # create a custom form for the Driver Model
 class UserRegistrationForm(forms.ModelForm):
