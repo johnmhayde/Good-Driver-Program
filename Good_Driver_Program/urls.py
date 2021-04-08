@@ -14,7 +14,7 @@ urlpatterns = [
 	path('', include('portal.urls')),
     path('edit_info/', user_views.update_driver_info, name="update-info"),
     path('edit_sponsor_info/', user_views.update_sponsor_info, name="update-sponsor-info"),
-    path('application/', user_views.application, name="apply")
+    path('application/', user_views.application, name="apply"),
     path('change-password/', auth_views.PasswordChangeView.as_view(template_name='change-password.html', success_url = '/'), name='change_password')
 ]
 
