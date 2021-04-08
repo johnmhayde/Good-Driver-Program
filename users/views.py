@@ -79,6 +79,7 @@ def update_sponsor_info(request):
 		sponsor_form = SponsorUpdateForm(request.POST, request.FILES, instance=sponsor)
 		if sponsor_form.is_valid():
 			sponsor_form.save()
+			UserEditInfo.objects.create(username=sponsor.username, date = "Today", time = "")
 			messages.success(request, f'Your account has been updated')
 			return redirect('sponsor-home')
 	else:
