@@ -83,7 +83,7 @@ def update_sponsor_info(request):
 			return redirect('sponsor-home')
 	else:
 		sponsor = Sponsor.objects.get(username=request.user.username)
-		sponsor_form = SponsorUpdateForm(instance=Sponsor)
+		sponsor_form = SponsorUpdateForm(instance=sponsor)
 	context = {
 		'sponsor_form' : sponsor_form
 	}
