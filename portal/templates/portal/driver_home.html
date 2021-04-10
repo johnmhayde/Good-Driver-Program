@@ -19,18 +19,6 @@
 					<a href="{% url 'update-info' %}">Edit Profile Information</a>
 				</div>
 			</div>
-			<div class="content-section">
-				<div class="media-heading">
-					<h4 class="text-secondary">Current Point Balances Per Sponsor</h4>
-					{% if sponsor_list %}
-						{% for sponsor in sponsor_list %}
-
-						{% endfor %}
-					{% else %}
-						<p>No sponsor point balances to display</p>
-					{% endif %}
-				</div>
-			</div>
 		</div>
 		<div class="col-md-7">
 			<h2 class="media-heading d-flex justify-content-center">Point History</h2>
@@ -57,7 +45,32 @@
 				<p class="text-secondary">No Point History To Display</p>
 			{% endif %}
 		</div>
-		<div class="col-md-8">
+	</div>
+	<div class="row">
+		<div class="col-md-5 content-section">
+			<div class="media-heading">
+				<h4 class="text-secondary">Current Point Balances Per Sponsor</h4>
+				{% if sponsor_list %}
+				<table class="table">
+					<tr>
+						<th scope="col">Sponsor Company</th>
+						<th scope="col">Point Total</th>
+					</tr>
+					{% for sponsor in sponsor_list %}
+						<tbody>
+							<tr>
+								<td>{{ sponsor.sponsor_company }}</td>
+								<td>{{ sponsor.driver_points }}</td>
+							</tr>
+						</tbody>
+					{% endfor %}
+				</table>
+				{% else %}
+					<p>No sponsor point balances to display</p>
+				{% endif %}
+			</div>
+		</div>
+		<div class="col-md-7">
 			<h2 class="media-heading d-flex justify-content-center">Applications</h2>
 			{% if applications %}
 				<table class="table">

@@ -5,6 +5,7 @@ from users.models import Sponsor
 from users.models import GenericAdmin
 from users.models import GenericUser
 from users.models import Application
+from users.models import Sponsorship
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 # from portal.models import UserLogin
@@ -53,7 +54,10 @@ def driver_home(request):
 	except Application.DoesNotExist:
 		applications = None
 	# get sponsors and point totals
-	
+	try:
+		sponsor_list = Sponsorship.objects.filter(driver=user.username)
+	except Sponsorship.DoesNotExist:
+		sponsor_list = None
 	data = {
 	'points' : driver.points,
 	'point_hist' : point_hist,
@@ -63,7 +67,8 @@ def driver_home(request):
 	'address' : driver.address,
 	'profile_photo' : driver.profile_photo.url,
 	'applications' : applications,
-	'sponsor' : driver.sponsor
+	'sponsor' : driver.sponsor,
+	'sponsor_list' : sponsor_list,
 
 	}
 
