@@ -52,6 +52,8 @@ def driver_home(request):
 		applications = Application.objects.filter(driver=user.username)
 	except Application.DoesNotExist:
 		applications = None
+	# get sponsors and point totals
+	
 	data = {
 	'points' : driver.points,
 	'point_hist' : point_hist,
@@ -61,7 +63,6 @@ def driver_home(request):
 	'address' : driver.address,
 	'profile_photo' : driver.profile_photo.url,
 	'applications' : applications,
-	# ADDED
 	'sponsor' : driver.sponsor
 
 	}

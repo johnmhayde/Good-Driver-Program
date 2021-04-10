@@ -7,7 +7,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-5">
 			<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
 			<div class="content-section">
 				<div class="media-body">
@@ -21,11 +21,18 @@
 			</div>
 			<div class="content-section">
 				<div class="media-heading">
-					<h5 class="text-secondary">Current Point Balance: {{ points }} points</h5>
+					<h4 class="text-secondary">Current Point Balances Per Sponsor</h4>
+					{% if sponsor_list %}
+						{% for sponsor in sponsor_list %}
+
+						{% endfor %}
+					{% else %}
+						<p>No sponsor point balances to display</p>
+					{% endif %}
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-7">
 			<h2 class="media-heading d-flex justify-content-center">Point History</h2>
 			{% if point_hist %}
 				<table class="table">
@@ -50,7 +57,7 @@
 				<p class="text-secondary">No Point History To Display</p>
 			{% endif %}
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-8">
 			<h2 class="media-heading d-flex justify-content-center">Applications</h2>
 			{% if applications %}
 				<table class="table">
@@ -58,6 +65,7 @@
 						<th scope="col">Sponsor</th>
 						<th scope="col">Date</th>
 						<th scope="col">Status</th>
+						<th scope="col">Reason</th>
 					</tr>
 					{% for item in applications reversed %}
 						<tbody>
@@ -65,6 +73,7 @@
 								<td>{{ item.sponsor_company }}</td>
 								<td>{{ item.date }}</td>
 								<td>{{ item.status }}</td>
+								<td>{{ item.reason }}</td>
 							</tr>
 						</tbody>
 					{% endfor %}
