@@ -18,11 +18,11 @@ class AdminAdmin(admin.ModelAdmin):
 	list_display = ('username', 'first_name', 'last_name', 'email')
 class AdminPointHist(admin.ModelAdmin):
 	model = PointHist
-	list_display = ('username', 'date', 'points', 'reason')
+	list_display = ('username', 'sponsor_username', 'date', 'points', 'reason')
 
 class ApplicationHist(admin.ModelAdmin):
 	model = Application
-	list_display = ('driver', 'sponsor', 'sponsor_company', 'date', 'status')
+	list_display = ('driver', 'sponsor', 'sponsor_company', 'date', 'status', 'reason')
 
 admin.site.register(Driver, AdminDriver)
 admin.site.register(GenericUser, AdminGenericUser)

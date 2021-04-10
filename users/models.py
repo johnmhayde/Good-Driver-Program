@@ -64,3 +64,4 @@ class Application(models.Model):
 	sponsor_company = models.CharField(max_length=30, default="")
 	date = models.DateField(auto_now_add=True)
 	status = models.CharField(max_length=10)
+	reason = models.CharField(max_length=300, default="")
