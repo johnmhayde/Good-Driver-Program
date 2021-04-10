@@ -32,6 +32,7 @@
 					<tr>
 						<th scope="col">Point Amount</th>
 						<th scope="col">Date</th>
+						<th scope="col">Sponsor Company</th>
 						<th scope="col">Reason</th>
 					</tr>
 					{% for item in point_hist reversed %}
@@ -39,6 +40,7 @@
 							<tr>
 								<td>{{ item.points }}</td>
 								<td>{{ item.date }}</td>
+								<td>{{ item.sponsor_company }}</td>
 								<td>{{ item.reason }}</td>
 							</tr>
 						</tbody>

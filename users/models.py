@@ -46,6 +46,7 @@ class Sponsor(models.Model):
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)
 	sponsor_username = models.CharField(max_length=30)
+	sponsor_company = models.CharField(max_length=30, default="")
 	date = models.CharField(max_length=30)
 	points = models.IntegerField(default=0)
 	reason = models.CharField(max_length=300)
