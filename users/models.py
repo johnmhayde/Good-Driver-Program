@@ -42,6 +42,14 @@ class Sponsor(models.Model):
 	sponsor_company = models.CharField(max_length=30, default = "")
 	security_question = models.CharField(max_length=60, default = "")
 	security_answer = models.CharField(max_length=60, default = "")
+	list_last_search = models.CharField(max_length=50,default="candle")
+	list_items_per_page = models.IntegerField(default=25)
+	list_sort_order = models.CharField(max_length=4,default="up") #up, down
+	list_sort_on = models.CharField(max_length=7,default="created") #created, price, score
+	catalog_last_search = models.CharField(max_length=50,default="")
+	catalog_items_per_page = models.IntegerField(default=25)
+	catalog_sort_order = models.CharField(max_length=4,default="up") #up, down
+	catalog_sort_on = models.CharField(max_length=7,default="name") #name, ...?
 
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)
@@ -51,12 +59,9 @@ class PointHist(models.Model):
 	reason = models.CharField(max_length=300)
 
 class Product(models.Model):
-	name = models.CharField(max_length=50)
-	stock = models.IntegerField(default=1)
-	price = models.IntegerField(default=1)
-	desc = models.CharField(max_length=2000)
-	#images???
+	sponsor_company = models.CharField(max_length=30, default = "")
 	idNum = models.IntegerField(default=1)
+	priceRaw = models.IntegerField(default=1) #Assuming we ever reach the point of point scaling per driver...
 
 class Application(models.Model):
 	driver = models.CharField(max_length=30)
@@ -64,3 +69,9 @@ class Application(models.Model):
 	sponsor_company = models.CharField(max_length=30, default="")
 	date = models.DateField(auto_now_add=True)
 	status = models.CharField(max_length=10)
+
+class Sponsorship(models.Model):
+	sponsor_company = models.CharField(max_length=30, default = "")
+	driver = models.CharField(max_length=30)
+	driver_points = models.IntegerField(default=0)
+	price_scalar = models.FloatField(default=1)
