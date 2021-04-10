@@ -74,6 +74,7 @@ class Application(models.Model):
 
 class Sponsorship(models.Model):
 	sponsor_company = models.CharField(max_length=30, default = "")
+	sponsor_username = models.CharField(max_length=30, default = "")
 	driver = models.CharField(max_length=30)
 	driver_points = models.IntegerField(default=0)
 	price_scalar = models.FloatField(default=1)
