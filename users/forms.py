@@ -109,4 +109,9 @@ class SponsorUpdateForm(forms.ModelForm):
 		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
 
 class ApplicationForm(forms.Form):
+	#sponsors = Sponsor.objects.filter()
+	#sponsors_cleaned = []
+	#for sponsor in sponsors:
+	#	sponsors_cleaned.append(tuple([sponsor.username,sponsor.sponsor_company]))
+	#sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=sponsors_cleaned)
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor.username,sponsor.sponsor_company]) for sponsor in Sponsor.objects.all()])

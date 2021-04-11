@@ -10,5 +10,6 @@ urlpatterns = [
     path('sponsor_home/', views.sponsor_home, name='sponsor-home'),
     path('admin/', views.GenericAdmin, name='admin-home'),
     path('catalog_sponsor/',views.catalog_sponsor, name='catalog-sponsor'),
-    path('list_item/',views.sponsor_list, name='sponsor-list-item')
+    path('list_item/',views.sponsor_list, name='sponsor-list-item'),
+    path('select_driver/',views.select_driver, name='select-driver')
 ]

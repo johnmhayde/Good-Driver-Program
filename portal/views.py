@@ -14,6 +14,12 @@ from html import unescape
 import time
 # from portal.models import UserLogin
 
+def driverGet(user):
+	gUser = GenericUser.objects.get(username=user.username)
+	if(gUser.type == 'Driver'):
+		return Driver.objects.get(username=user.username)
+	elif(gUser.type == 'Sponsor'):
+		return Driver.objects.get(username=Sponsor.objects.get(username=user.username).driver_vicarious)
 # send user to homepage
 def home(request):
 	user = request.user
@@ -46,7 +52,7 @@ def register(request):
 def driver_home(request):
 	# send driver info to page
 	user = request.user
-	driver = Driver.objects.get(username=user.username)
+	driver = driverGet(user)
 	# send point history to page
 	try:
 		point_hist = PointHist.objects.filter(username=user.username)
@@ -206,4 +212,35 @@ def sponsor_list(request):
 		response=render(request, 'portal/sponsor_list_item.html', data)
 	else:
 		response = redirect('home')	
+	return response
+
+def select_driver(request):
+	# Assign the sponsor user data to the user var
+	user = request.user
+	# Get the sponsor username
+	user = request.user
+	gUser = GenericUser.objects.get(username=user.username)
+	userType = gUser.type
+	if userType == 'Sponsor':
+		sponsor = Sponsor.objects.get(username=user.username)
+		driverUsername = ''
+		driverUsername = request.POST.get('driver-username')
+		if driverUsername!='' and driverUsername!=None:
+			sponsor.driver_vicarious = driverUsername
+			sponsor.save()
+		sponsorships = Sponsorship.objects.filter(sponsor_company=sponsor.sponsor_company)
+		drivers = []
+		for sponsorship in sponsorships:
+			driversReturned = Driver.objects.filter(username=sponsorship.driver)
+			for driver in driversReturned:
+				drivers.append(driver)
+		
+		data = {
+			'sponsor_company' : sponsor.sponsor_company,
+			'drivers':drivers,
+			'current_driver':sponsor.driver_vicarious
+		}
+		response=render(request, 'portal/sponsor_select_driver.html', data)
+	else:
+		response = redirect('home')
 	return response

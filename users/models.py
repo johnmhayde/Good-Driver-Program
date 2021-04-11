@@ -50,6 +50,7 @@ class Sponsor(models.Model):
 	catalog_items_per_page = models.IntegerField(default=25)
 	catalog_sort_order = models.CharField(max_length=4,default="up") #up, down
 	catalog_sort_on = models.CharField(max_length=7,default="name") #name, ...?
+	driver_vicarious = models.CharField(max_length=30,default="")
 
 class PointHist(models.Model):
 	username = models.CharField(max_length=30)
