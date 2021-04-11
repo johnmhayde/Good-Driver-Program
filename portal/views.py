@@ -6,8 +6,12 @@ from users.models import GenericAdmin
 from users.models import GenericUser
 from users.models import Application
 from users.models import Sponsorship
+from users.models import Product
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+import requests
+from html import unescape
+import time
 # from portal.models import UserLogin
 
 # send user to homepage
@@ -107,3 +111,99 @@ def sponsor_home(request):
 
 def admin_home(request):
 	return render(request, 'admin/')
+
+def catalog_sponsor(request):
+	# Assign the sponsor user data to the user var
+	user = request.user
+	# Get the sponsor username
+	user = request.user
+	gUser = GenericUser.objects.get(username=user.username)
+	userType = gUser.type
+	if userType == 'Sponsor':
+		sponsor = Sponsor.objects.get(username=user.username)
+		prodID = ''
+		prodID = request.POST.get('product-chosen')
+		if prodID!='' and prodID!=None:
+			print('Product ID received!')
+			if Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum = prodID).exists():
+				newProduct = Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum = prodID).delete()
+		listed_products = Product.objects.filter(sponsor_company=sponsor.sponsor_company)
+		parse1 = []
+		tally = 0
+		for item in listed_products:
+			parse1.append(requests.get('https://openapi.etsy.com/v2/listings/'+str(item.idNum)+'?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0])
+			tally+=1
+			if tally>8:
+				time.sleep(1)
+				tally = 0
+		tally = 0
+		parse3 = parse1
+		tags = "tags: "
+		for x in parse3:
+			x['title']=unescape(x['title'])
+			x['description']=unescape(x['description'])
+			x['image']=requests.get('https://openapi.etsy.com/v2/listings/'+str(x['listing_id'])+'/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_170x135']
+			tally+=1
+			if tally>8:
+				time.sleep(1)
+				tally = 0
+			if len(x['title'])>50:
+				x['title']=x['title'][0:49]+'...'
+			if len(x['description'])>250:
+				x['description']=x['description'][0:249 ]+'...'
+		data = {
+			'sponsor_company' : sponsor.sponsor_company,
+			'items':parse3
+		}
+		response=render(request, 'portal/catalog_sponsor.html', data)
+	else:
+		response = redirect('home')
+	return response
+
+def sponsor_list(request):
+	# Assign the sponsor user data to the user var
+	user = request.user
+	# Get the sponsor username
+	gUser = GenericUser.objects.get(username=user.username)
+	userType = gUser.type
+	print('user retrieved')
+	if userType == 'Sponsor':
+		sponsor = Sponsor.objects.get(username=user.username)
+		search = sponsor.list_last_search
+		search = request.POST.get('search')
+		prodID = ''
+		prodID = request.POST.get('product-chosen')
+		if search!=sponsor.list_last_search and search!=None:
+			sponsor.list_last_search = search
+			sponsor.save()
+		if prodID!='' and prodID!=None:
+			if Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum = prodID).exists()==False:
+				newProduct = Product.objects.create(sponsor_company=sponsor.sponsor_company, idNum=prodID, priceRaw = float(requests.get('https://openapi.etsy.com/v2/listings/'+prodID+'?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['price']))
+		#This is a failsafe in case the database isn't cooperating with older users.
+		if sponsor.list_last_search == '':
+			sponsor.list_last_search = 'candle'
+			sponsor.save()
+		response = requests.get('https://openapi.etsy.com/v2/listings/active?keywords='+sponsor.list_last_search+'&api_key=pmewf48x56vb387qgsprzzry')
+		parse1 = response.json()['results']
+		tally = 0;
+		for x in parse1:
+			x['title']=unescape(x['title'])
+			x['description']=unescape(x['description'])
+			x['image']=requests.get('https://openapi.etsy.com/v2/listings/'+str(x['listing_id'])+'/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_170x135']
+			tally+=1
+			if tally>8:
+				time.sleep(1)
+				tally = 0
+			if len(x['title'])>50:
+				x['title']=x['title'][0:49]+'...'
+			if len(x['description'])>250:
+				x['description']=x['description'][0:249 ]+'...'
+		tally = 0
+		data = {
+			'items': parse1,
+			'searchVal': sponsor.list_last_search
+			}
+		response=render(request, 'portal/sponsor_list_item.html', data)
+	else:
+		response = redirect('home')	
+	return response
