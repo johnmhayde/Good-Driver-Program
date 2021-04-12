@@ -6,7 +6,7 @@
 			<!-- TODO: WANT TO ADD IN SPONSOR NAME HERE, SOME KIND OF WELCOME MESSAGE WOULD BE NICE -->
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-md-5">
 			<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
@@ -41,24 +41,20 @@
 		{% if my_drivers %}
 			<table class="table">
 				<tr>
-					<th scope="col">First Name</th>
-					<th scope="col">Last Name</th>
-					<th scope="col">Username</th>
-					<th scope="col"># of Points</th>
+					<th scope="col">Driver Username</th>
+					<th scope="col">Number of Points</th>
 					<th scope="col">Edit Points</th>
 
 				</tr>
 				{% for item in my_drivers reversed %}
 					<tbody>
 						<tr>
-							<td>{{ item.first_name }}</td>
-							<td>{{ item.last_name }}</td>
-							<td>{{ item.username }}</td>
-							<td>{{ item.points }}</td>
+							<td>{{ item.driver }}</td>
+							<td>{{ item.driver_points }}</td>
 							<td>
 								<form action="{% url 'update-points' %}" method="POST">
 									{% csrf_token %}
-									<button type="submit" name="driver_username" value="{{item.username}}" class="btn btn-success">Edit</button>
+									<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Edit</button>
 								</form>
 							</td>
 						</tr>
@@ -71,7 +67,7 @@
 	</div>
 
 
-	<div class="col-md-6">
+	<div class="col-md-12">
 		<h2 class="media-heading d-flex justify-content-center">Driver Applications</h2>
 		{% if applications %}
 			<table class="table">
@@ -79,6 +75,7 @@
 					<th scope="col">Driver Username</th>
 					<th scope="col">Date</th>
 					<th scope="col">Status</th>
+					<th scope="col">Accept/Reject</th>
 				</tr>
 				{% for item in applications reversed %}
 					<tbody>
@@ -86,6 +83,12 @@
 							<td>{{ item.driver }}</td>
 							<td>{{ item.date }}</td>
 							<td>{{ item.status }}</td>
+							<td>
+								<form action="{% url 'accept-application' %}" method="POST">
+									{% csrf_token %}
+									<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Edit</button>
+								</form>
+							</td>
 						</tr>
 					</tbody>
 				{% endfor %}

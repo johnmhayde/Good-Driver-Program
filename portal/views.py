@@ -91,7 +91,7 @@ def sponsor_home(request):
 	sponsor = Sponsor.objects.get(username=user.username)
 
 	try:
-		my_drivers = Driver.objects.filter(sponsor=user.username)
+		my_drivers = Sponsorship.objects.filter(sponsor_username=user.username)
 	except Driver.DoesNotExist:
 		my_drivers = None
 	# get applications
@@ -211,7 +211,7 @@ def sponsor_list(request):
 			}
 		response=render(request, 'portal/sponsor_list_item.html', data)
 	else:
-		response = redirect('home')	
+		response = redirect('home')
 	return response
 
 def select_driver(request):
@@ -234,7 +234,7 @@ def select_driver(request):
 			driversReturned = Driver.objects.filter(username=sponsorship.driver)
 			for driver in driversReturned:
 				drivers.append(driver)
-		
+
 		data = {
 			'sponsor_company' : sponsor.sponsor_company,
 			'drivers':drivers,

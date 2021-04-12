@@ -122,3 +122,9 @@ class ApplicationForm(forms.Form):
 	#	sponsors_cleaned.append(tuple([sponsor.username,sponsor.sponsor_company]))
 	#sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=sponsors_cleaned)
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor.username,sponsor.sponsor_company]) for sponsor in Sponsor.objects.all()])
+
+class AcceptApplicationForm(forms.ModelForm):
+	model = Application
+	class Meta:
+		model = Application
+		fields = ['status', 'reason']
