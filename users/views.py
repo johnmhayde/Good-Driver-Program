@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm
-from .models import GenericUser, Driver, Sponsor, Application, PointHist
+from .models import GenericUser, Driver, Sponsor, Application, PointHist, Sponsorship
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from portal.models import UserEditInfo
@@ -76,39 +76,63 @@ def update_driver_info(request):
 
 
 def update_driver_points(request):
-	print(" RUN #")
-	driver = Driver.objects.get(username=request.POST.get("driver_username"))
-	print(driver.username)
-	print(driver.point_change_temp)
-	if(driver.point_change_temp != 0):
-		# Add to driver pointhist table
-		# pointhist = PointHist.objects.create(driver.username, Sponsor.username, date.today().strftime("%d/%m/%Y"), driver.point_change_temp, "I havent done this yet lol")
-		pointhist = PointHist.objects.create()
-		pointhist.username = driver.username
-
-		pointhist.sponsor_username = Sponsor.objects.get(username = request.user.username).username
-		pointhist.date = date.today().strftime("%m/%d/%Y")
-		pointhist.points = driver.point_change_temp
-		pointhist.reason = "5 car pileup"
-		pointhist.save()
-		print("PointHistComplete")
-
-	driver.points += driver.point_change_temp
-	driver.point_change_temp = 0
-	driver.save()
-
-	driver_points_form = EditPointsForm(request.POST, instance=driver)
-
-	if driver_points_form.is_valid():
-		driver_points_form.save()
-		messages.success(request, f"Your Driver's account has been updated")
-		return redirect('sponsor-home')
+	if request.method == 'POST':
+		driver = Driver.objects.get(username=request.POST.get("driver_username"))
+		driver_points_form = EditPointsForm(request.POST, instance=driver)
+		if driver_points_form.is_valid():
+			# update point hist
+			points = driver_points_form.cleaned_data.get('points')
+			reason = driver_points_form.cleaned_data.get('reason')
+			pointhist = PointHist.objects.create()
+			pointhist.username = driver.username
+			pointhist.sponsor_username = Sponsor.objects.get(username = request.user.username).username
+			pointhist.sponsor_company = Sponsor.objects.get(username = request.user.username).sponsor_company
+			pointhist.date = date.today().strftime("%m/%d/%Y")
+			pointhist.points = points
+			pointhist.reason = reason
+			pointhist.save()
+			# update drive points in sponsorships
+			sponsorship = Sponsorship.objects.get(driver = request.POST.get("driver_username"))
+			sponsorship.driver_points += points
+			sponsorship.save()
+			messages.success(request, f"Your Driver's account has been updated")
+			return redirect('sponsor-home')
 
 	context = {
 		'driver_points_form' : driver_points_form,
 		'driver' : driver
 	}
 	return render(request, 'users/edit_points.html' , context)
+
+
+	# driver = Driver.objects.get(username=request.POST.get("driver_username"))
+	# if(driver.point_change_temp != 0):
+	# 	# Add to driver pointhist table
+	# 	# pointhist = PointHist.objects.create(driver.username, Sponsor.username, date.today().strftime("%d/%m/%Y"), driver.point_change_temp, "I havent done this yet lol")
+	# 	pointhist = PointHist.objects.create()
+	# 	pointhist.username = driver.username
+	# 	pointhist.sponsor_username = Sponsor.objects.get(username = request.user.username).username
+	# 	pointhist.date = date.today().strftime("%m/%d/%Y")
+	# 	pointhist.points = driver.point_change_temp
+	# 	pointhist.reason = "5 car pileup"
+	# 	pointhist.save()
+	#
+	# driver.points += driver.point_change_temp
+	# driver.point_change_temp = 0
+	# driver.save()
+	#
+	# driver_points_form = EditPointsForm(request.POST, instance=driver)
+	#
+	# if driver_points_form.is_valid():
+	# 	driver_points_form.save()
+	# 	messages.success(request, f"Your Driver's account has been updated")
+	# 	return redirect('sponsor-home')
+	#
+	# context = {
+	# 	'driver_points_form' : driver_points_form,
+	# 	'driver' : driver
+	# }
+	# return render(request, 'users/edit_points.html' , context)
 
 # view for editing sponsor profile information
 def update_sponsor_info(request):
