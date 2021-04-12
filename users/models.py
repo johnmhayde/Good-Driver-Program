@@ -19,6 +19,8 @@ class Driver(models.Model):
 	email = models.CharField(max_length=30)
 	address = models.CharField(max_length=50)
 	points = models.IntegerField(default=0)
+	point_change_temp = models.IntegerField(default=0)
+
 	# ADDED
 	sponsor = models.CharField(max_length=50, default = "")
 	profile_photo = ResizedImageField(quality=50, default='default.jpg', upload_to='profile_photos')

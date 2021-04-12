@@ -108,6 +108,13 @@ class SponsorUpdateForm(forms.ModelForm):
 		model = Sponsor
 		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
 
+class EditPointsForm(forms.ModelForm):
+	model = Driver
+	# deliver only editable content to the page
+	class Meta:
+		model = Driver
+		fields = ['point_change_temp']
+
 class ApplicationForm(forms.Form):
 	#sponsors = Sponsor.objects.filter()
 	#sponsors_cleaned = []

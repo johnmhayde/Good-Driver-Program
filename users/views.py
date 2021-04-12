@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm
-from .models import GenericUser, Driver, Sponsor, Application
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm
+from .models import GenericUser, Driver, Sponsor, Application, PointHist
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from portal.models import UserEditInfo
+from datetime import date
+
 
 # register new user with form input if form is valid
 def register(request):
@@ -71,6 +73,42 @@ def update_driver_info(request):
 	}
 
 	return render(request, 'users/edit_info.html', context)
+
+
+def update_driver_points(request):
+	print(" RUN #")
+	driver = Driver.objects.get(username=request.POST.get("driver_username"))
+	print(driver.username)
+	print(driver.point_change_temp)
+	if(driver.point_change_temp != 0):
+		# Add to driver pointhist table
+		# pointhist = PointHist.objects.create(driver.username, Sponsor.username, date.today().strftime("%d/%m/%Y"), driver.point_change_temp, "I havent done this yet lol")
+		pointhist = PointHist.objects.create()
+		pointhist.username = driver.username
+
+		pointhist.sponsor_username = Sponsor.objects.get(username = request.user.username).username
+		pointhist.date = date.today().strftime("%m/%d/%Y")
+		pointhist.points = driver.point_change_temp
+		pointhist.reason = "5 car pileup"
+		pointhist.save()
+		print("PointHistComplete")
+
+	driver.points += driver.point_change_temp
+	driver.point_change_temp = 0
+	driver.save()
+
+	driver_points_form = EditPointsForm(request.POST, instance=driver)
+
+	if driver_points_form.is_valid():
+		driver_points_form.save()
+		messages.success(request, f"Your Driver's account has been updated")
+		return redirect('sponsor-home')
+
+	context = {
+		'driver_points_form' : driver_points_form,
+		'driver' : driver
+	}
+	return render(request, 'users/edit_points.html' , context)
 
 # view for editing sponsor profile information
 def update_sponsor_info(request):
