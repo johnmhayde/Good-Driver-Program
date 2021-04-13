@@ -1,0 +1,24 @@
+{% extends "portal/base_driver.html" %}
+{% block content %}
+{% for item in items reversed %}
+<div class="row">
+		<div class="col-md-12">
+			<h1>{{item.title}}</h1>
+		</div>
+</div>
+<div class="row">
+	<div class="col-md-10">
+			<h1>{{item.description}}</h1>
+		</div>
+</div>
+<div class="row">
+	<div class="col-md-10">
+			<h1>{{item.price}}{{item.currency_code}}</h1>
+		</div>
+</div>
+<form action="{% url 'product-detail' item.listing_id  %}" method="post">
+							{% csrf_token %}
+							<button id="product-chosen" type="submit" name="product-chosen" value="{{ item.listing_id }}"  class="btn btn-success">Add to Cart</button>
+						</form>
+{% endfor %}
+{% endblock content%}
