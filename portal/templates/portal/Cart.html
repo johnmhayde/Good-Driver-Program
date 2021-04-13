@@ -1,0 +1,50 @@
+{% extends "portal/base_driver.html" %}
+{% block content %}
+<div class="row">
+		<div class="col-md-12">
+			<h1>Cart</h1>
+		</div>
+</div>
+{%if cartItems%}
+<table class="table">
+		<tr>
+			<th scope="col">Product</th>
+			<th scope="col">Sponsor</th>
+			<th scope="col">Price</th>
+			<th scope="col">Date Placed</th>
+		</tr>
+	{% for item in cartItems reversed %}
+	<tbody>
+			<tr>
+				<td>{{ item.productName }}</td>
+				<td>{{ item.product.sponsor_company }}</td>
+				<td>{{ item.price }}</td>
+				<td>{{ item.date }}</td>
+				<td>
+					<form action="{% url 'Cart' %}" method="post">
+							{% csrf_token %}
+							<button id="product-chosen" type="submit" name="product-chosen" value="{{ item.id }}"  class="btn btn-success">Remove from Cart</button>
+						</form>
+				</td>
+			</tr>
+
+	{% endfor %}
+			<tr>
+				<td>
+					<form action="{% url 'Order-Placed' %}" method="post">
+							{% csrf_token %}
+							<button id="place-order" type="submit" name="place-order" value="{{ item.id }}"  class="btn btn-success">Place Order</button>
+						</form>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+
+				</tr>
+		</tbody>
+	</table>
+{% else %}
+	<p class="text-secondary">No Products In the cart</p>
+	{% endif %}
+{% endblock content%}
