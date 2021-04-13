@@ -86,3 +86,12 @@ class Sponsorship(models.Model):
 	driver = models.CharField(max_length=30)
 	driver_points = models.IntegerField(default=0)
 	price_scalar = models.FloatField(default=1)
+
+class DriverOrder(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    productName = models.CharField(max_length=30,default="")
+    customer = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    price = models.IntegerField()
+    date = models.DateField(default=datetime.datetime.today)
+    status = models.BooleanField(default=False)
