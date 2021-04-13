@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from users.models import Driver, PointHist
-from users.models import Sponsor,DriverOrder
+from users.models import Sponsor, DriverOrder
 from users.models import GenericAdmin
 from users.models import GenericUser
 from users.models import Application

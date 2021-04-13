@@ -116,12 +116,11 @@ class EditPointsForm(forms.ModelForm):
 		fields = ['points', 'reason']
 
 class ApplicationForm(forms.Form):
-	#sponsors = Sponsor.objects.filter()
-	#sponsors_cleaned = []
-	#for sponsor in sponsors:
-	#	sponsors_cleaned.append(tuple([sponsor.username,sponsor.sponsor_company]))
-	#sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=sponsors_cleaned)
-	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor.sponsor_company,sponsor.sponsor_company]) for sponsor in Sponsor.objects.all()])
+	sponsor_list = []
+	for sponsor in Sponsor.objects.all():
+		if sponsor_list.count(sponsor.sponsor_company) == 0:
+			sponsor_list.append(sponsor.sponsor_company)
+	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
 
 class AcceptApplicationForm(forms.ModelForm):
 	model = Application

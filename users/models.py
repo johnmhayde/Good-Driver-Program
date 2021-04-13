@@ -1,7 +1,6 @@
 from django.db import models
 from PIL import Image
 import datetime
-
 from django_resized import ResizedImageField
 
 
