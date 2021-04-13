@@ -288,19 +288,19 @@ def productListView(request, products_per_page, page_number, sponsor_company):
     print('user retrieved')
     if userType == 'Driver':
         driver = Driver.objects.get(username=user.username)
-        sponsor = Sponsor.objects.get(sponsor_company=sponsor_company)
-        search = sponsor.list_last_search
-        search = request.POST.get('search')
+        #sponsor = Sponsor.objects.get(sponsor_company=sponsor_company)
+        #search = sponsor.list_last_search
+        #search = request.POST.get('search')
         prodID = ''
         prodID = request.POST.get('product-chosen')
 
         if prodID != '' and prodID != None:
             print('Product ID received!')
-            if Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum=prodID).exists():
-                tempProduct = Product.objects.get(sponsor_company=sponsor.sponsor_company, idNum=prodID)
+            if Product.objects.filter(sponsor_company=sponsor_company, idNum=prodID).exists():
+                tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
                                                       price=tempProduct.priceRaw)
-        listed_products = Product.objects.filter(sponsor_company=sponsor.sponsor_company)
+        listed_products = Product.objects.filter(sponsor_company=sponsor_company)
 
         parse1 = []
         for item in listed_products:
@@ -336,7 +336,7 @@ def productListView(request, products_per_page, page_number, sponsor_company):
                 x['description'] = x['description'][0:249] + '...'
 
         data = {
-            'sponsor_company': sponsor.sponsor_company,
+            'sponsor_company': sponsor_company,
             'items': parse3,
             'Driver': driver,
             'paginated': paginated,
