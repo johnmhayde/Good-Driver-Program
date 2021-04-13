@@ -89,14 +89,14 @@ def sponsor_home(request):
 	user = request.user
 	# Get the sponsor username
 	sponsor = Sponsor.objects.get(username=user.username)
-
+	sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
 	try:
-		my_drivers = Sponsorship.objects.filter(sponsor_username=user.username)
+		my_drivers = Sponsorship.objects.filter(sponsor_company=sponsor_company)
 	except Driver.DoesNotExist:
 		my_drivers = None
 	# get applications
 	try:
-		applications = Application.objects.filter(sponsor=user.username)
+		applications = Application.objects.filter(sponsor_company=sponsor_company)
 	except Application.DoesNotExist:
 		applications = None
 

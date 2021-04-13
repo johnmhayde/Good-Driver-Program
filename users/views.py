@@ -127,9 +127,8 @@ def application(request):
 	if request.method == 'POST':
 		application_form = ApplicationForm(request.POST)
 		if application_form.is_valid():
-			sponsor = application_form.cleaned_data.get('sponsor')
-			sponsor_company = Sponsor.objects.get(username=sponsor)
-			application = Application.objects.create(driver=request.user.username, sponsor=sponsor, sponsor_company=sponsor_company.sponsor_company, status="Pending")
+			sponsor_company = application_form.cleaned_data.get('sponsor')
+			application = Application.objects.create(driver=request.user.username, sponsor_company=sponsor_company, status="Pending")
 			application.save()
 			messages.success(request, f"Your application has been submitted!")
 			return redirect('driver-home')
@@ -146,14 +145,15 @@ def accept_application(request):
 		accept_application_form = AcceptApplicationForm(request.POST)
 		if accept_application_form.is_valid():
 			# update application
-			application = Application.objects.get(driver=driver.username)
+			sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
+			application = Application.objects.get(driver=driver.username, sponsor_company=sponsor_company)
 			application.status = accept_application_form.cleaned_data.get('status')
 			application.reason = accept_application_form.cleaned_data.get('reason')
 			application.save()
 			# save Sponsorship
 			if accept_application_form.cleaned_data.get('status') == 'Accepted':
 				sponsor = Sponsor.objects.get(username=request.user.username)
-				sponsorship = Sponsorship.objects.create(sponsor_company=sponsor.sponsor_company, sponsor_username=sponsor.username, driver=driver.username)
+				sponsorship = Sponsorship.objects.create(sponsor_company=sponsor.sponsor_company, driver=driver.username)
 				sponsorship.save()
 			return redirect('sponsor-home')
 	else:

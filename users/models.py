@@ -69,7 +69,6 @@ class Product(models.Model):
 
 class Application(models.Model):
 	driver = models.CharField(max_length=30)
-	sponsor = models.CharField(max_length=30)
 	sponsor_company = models.CharField(max_length=30, default="")
 	date = models.DateField(auto_now_add=True)
 	status = models.CharField(max_length=10)
@@ -77,7 +76,6 @@ class Application(models.Model):
 
 class Sponsorship(models.Model):
 	sponsor_company = models.CharField(max_length=30, default = "")
-	sponsor_username = models.CharField(max_length=30, default = "")
 	driver = models.CharField(max_length=30)
 	driver_points = models.IntegerField(default=0)
 	price_scalar = models.FloatField(default=1)

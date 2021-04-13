@@ -22,11 +22,11 @@ class AdminPointHist(admin.ModelAdmin):
 
 class ApplicationHist(admin.ModelAdmin):
 	model = Application
-	list_display = ('driver', 'sponsor', 'sponsor_company', 'date', 'status', 'reason')
+	list_display = ('driver', 'sponsor_company', 'date', 'status', 'reason')
 
 class SponsorshipHist(admin.ModelAdmin):
 	model = Sponsorship
-	list_display = ('sponsor_company', 'sponsor_username', 'driver', 'driver_points')
+	list_display = ('sponsor_company', 'driver', 'driver_points')
 
 class AdminProduct(admin.ModelAdmin):
 	model = Product
