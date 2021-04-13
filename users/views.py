@@ -146,7 +146,7 @@ def accept_application(request):
 		accept_application_form = AcceptApplicationForm(request.POST)
 		if accept_application_form.is_valid():
 			# update application
-			application = Application.objects.get(driver=driver.username)
+			application = Application.objects.get(driver=driver.username,sponsor_company=Sponsor.objects.get(username=request.user.username).sponsor_company)
 			application.status = accept_application_form.cleaned_data.get('status')
 			application.reason = accept_application_form.cleaned_data.get('reason')
 			application.save()
