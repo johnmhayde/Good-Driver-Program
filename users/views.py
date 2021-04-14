@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm, AcceptApplicationForm
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm, AcceptApplicationForm, GenerateDriverPointsReport
 from .models import GenericUser, Driver, Sponsor, Application, PointHist, Sponsorship
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -163,3 +163,17 @@ def accept_application(request):
 		'driver' : driver,
 	}
 	return render(request, 'users/accept_application.html', context)
+
+def generate_driver_points_report(request):
+	if request.method == 'POST':
+		generate_driver_points_report_form = GenerateDriverPointsReport(request.POST)
+		if generate_driver_points_report_form.is_valid():
+			print(generate_driver_points_report_form.cleaned_data.get('sponsor'))
+			print(generate_driver_points_report_form.cleaned_data.get('date_range'))
+			return redirect('sponsor-home')
+	else:
+		generate_driver_points_report_form = GenerateDriverPointsReport()
+	context = {
+		'generate_driver_points_report_form' : generate_driver_points_report_form,
+	}
+	return render(request, 'portal/generate_driver_points.html', context)

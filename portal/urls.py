@@ -17,5 +17,5 @@ urlpatterns = [
     path('Order_history/', views.Order_History , name='Order-History'),
     path('Order_Placed/', views.Order_Placed , name='Order-Placed'),
     path('driver_product_home/<int:products_per_page>&<int:page_number>&<str:sponsor_company>', views.productListView, name='driver-product-home'),
-    path('driver_product_home/<int:product_ID>&<str:sponsor_company>/', views.productDetailView, name="product-detail")
+    path('driver_product_home/<int:product_ID>&<str:sponsor_company>/', views.productDetailView, name="product-detail"),
 ]

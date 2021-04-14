@@ -127,3 +127,11 @@ class AcceptApplicationForm(forms.ModelForm):
 	class Meta:
 		model = Application
 		fields = ['status', 'reason']
+
+class GenerateDriverPointsReport(forms.Form):
+	sponsor_list = []
+	for sponsor in Sponsor.objects.all():
+		if sponsor_list.count(sponsor.sponsor_company) == 0:
+			sponsor_list.append(sponsor.sponsor_company)
+	sponsor = forms.ChoiceField(label="Select a sponsor from the list: ", choices=[tuple([sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
+	date_range = forms.ChoiceField(label="Select a date range: ", choices=[tuple(['day', 'Past Day']), tuple(['week', 'Past Week']), tuple(['month', 'Past Month']), tuple(['all', 'All'])])
