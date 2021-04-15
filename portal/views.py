@@ -94,34 +94,34 @@ def driver_home(request):
 
 
 def sponsor_home(request):
-	# Assign the sponsor user data to the user var
-	user = request.user
-	# Get the sponsor username
-	sponsor = Sponsor.objects.get(username=user.username)
-	sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
-	try:
-		my_drivers = Sponsorship.objects.filter(sponsor_company=sponsor_company)
-	except Driver.DoesNotExist:
-		my_drivers = None
-	# get applications
-	try:
-		applications = Application.objects.filter(sponsor_company=sponsor_company)
-	except Application.DoesNotExist:
-		applications = None
+    # Assign the sponsor user data to the user var
+    user = request.user
+    # Get the sponsor username
+    sponsor = Sponsor.objects.get(username=user.username)
+    sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
+    try:
+        my_drivers = Sponsorship.objects.filter(sponsor_company=sponsor_company)
+    except Driver.DoesNotExist:
+        my_drivers = None
+    # get applications
+    try:
+        applications = Application.objects.filter(sponsor_company=sponsor_company)
+    except Application.DoesNotExist:
+        applications = None
 
-	data = {
-		'first_name' : sponsor.first_name,
-		'last_name' : sponsor.last_name,
-		'phone_num' : sponsor.phone_num,
-		'address' : sponsor.address,
-		'email' : sponsor.email,
-		# Get rid of this variable, later.
-		'sponsor_company' : sponsor.sponsor_company,
-		# This will access all of the drivers assigned to the sponsors.
-		'my_drivers' : my_drivers,
-		'applications' : applications
-	}
-	return render(request, 'portal/sponsor_home.html', data)
+    data = {
+        'first_name': sponsor.first_name,
+        'last_name': sponsor.last_name,
+        'phone_num': sponsor.phone_num,
+        'address': sponsor.address,
+        'email': sponsor.email,
+        # Get rid of this variable, later.
+        'sponsor_company': sponsor.sponsor_company,
+        # This will access all of the drivers assigned to the sponsors.
+        'my_drivers': my_drivers,
+        'applications': applications
+    }
+    return render(request, 'portal/sponsor_home.html', data)
 
 
 def admin_home(request):
@@ -352,6 +352,7 @@ def productListView(request, products_per_page, page_number, sponsor_company):
         response = redirect('home')
     return response
 
+
 def driver_catalogs(request):
     user = request.user
     gUser = GenericUser.objects.get(username=user.username)
@@ -373,6 +374,7 @@ def driver_catalogs(request):
     else:
         response = redirect('home')
     return response
+
 
 def productDetailView(request, product_ID, sponsor_company):
     user = request.user
@@ -417,8 +419,12 @@ def Cart(request):
         driver = driverGet(user)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=False)
-        for items in cartItems:
+        orderID = ''
+        orderID = request.POST.get('product-chosen')
 
+        if orderID != '' and orderID != None:
+            order = DriverOrder.objects.get(customer=driver,id=orderID).delete()
+        for items in cartItems:
             parse1 = requests.get(
                 'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
                 '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
@@ -428,7 +434,7 @@ def Cart(request):
         data = {
             'cartItems': orders
         }
-        response = render(request,'portal/cart.html',data)
+        response = render(request, 'portal/cart.html', data)
     else:
         response = redirect('home')
 
@@ -445,7 +451,6 @@ def Order_History(request):
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=True)
         for items in cartItems:
-
             parse1 = requests.get(
                 'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
                 '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
@@ -455,7 +460,7 @@ def Order_History(request):
         data = {
             'cartItems': orders
         }
-        response = render(request,'portal/Order_History.html',data)
+        response = render(request, 'portal/Order_History.html', data)
     else:
         response = redirect('home')
 
@@ -467,7 +472,7 @@ def Order_Placed(request):
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
     user_placed_order = False
-    pointTotal = 0
+    user_out_of_points = False
     print('user retrieved')
     if userType == 'Driver' or userType == 'Sponsor':
         driver = driverGet(user)
@@ -475,17 +480,35 @@ def Order_Placed(request):
         cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         for items in cartItems:
             orders.append(items)
-            pointTotal += items.price
-        if pointTotal > 0:
-            user_placed_order = True
-            temp = DriverOrder.objects.filter(customer=driver, status=False).delete()
-            for items in orders:
-                newItem = DriverOrder.objects.create(product=items.product, customer=items.customer, quantity=items.quantity,
-                                                          price=items.price,status=True)
+
+        #    temp = DriverOrder.objects.filter(customer=driver, status=False).delete()
+        for order in orders:
+            itemsponsor = Sponsorship.objects.get(sponsor_company=order.product.sponsor_company, driver=driver.username)
+            temp = itemsponsor.driver_points - (itemsponsor.price_scalar * order.price)
+            if temp < 0:
+                user_out_of_points = True
+            else:
+                itemsponsor.driver_points = temp
+                itemsponsor.save()
+                order.status = True
+
+        if not user_out_of_points:
+            for order in orders:
+                order.save()
+        else:
+            for order in orders:
+                if order.status:
+                    itemsponsor = Sponsorship.objects.get(sponsor_company=order.product.sponsor_company,
+                                                          driver=driver.username)
+                    temp = itemsponsor.driver_points + (itemsponsor.price_scalar * order.price)
+                    itemsponsor.driver_points = temp
+                    itemsponsor.save()
+        #     temp = DriverOrder.objects.create(product=order.product, customer=order.customer, quantity=order.quantity, price=order.price,status=True)
         data = {
-            'placed': user_placed_order
+            'placed': user_placed_order,
+            'oop': user_out_of_points
         }
-        response = render(request,'portal/Order_Placed.html',data)
+        response = render(request, 'portal/Order_Placed.html', data)
     else:
         response = redirect('home')
 
