@@ -5,8 +5,8 @@ from .models import GenericUser, Driver, Sponsor, Application, PointHist, Sponso
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from portal.models import UserEditInfo
-from datetime import date
-
+from datetime import date, timedelta
+import datetime
 
 # register new user with form input if form is valid
 def register(request):
@@ -169,13 +169,13 @@ def generate_driver_points_report(request):
 		generate_driver_points_report_form = GenerateDriverPointsReport(request.POST)
 		if generate_driver_points_report_form.is_valid():
 			print(generate_driver_points_report_form.cleaned_data.get('driver'))
-			print(generate_driver_points_report_form.cleaned_data.get('date_range'))
+			date_range = generate_driver_points_report_form.cleaned_data.get('date_range')
+			print(date_range)
 			sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
-			if generate_driver_points_report_form.cleaned_data.get('driver') == 'None':
+			if generate_driver_points_report_form.cleaned_data.get('driver') == 'All':
 				# generate report for all drivers
 				drivers = PointHist.objects.filter(sponsor_company=sponsor_company)
 			else:
-				# generate report for specific driver
 				drivers = PointHist.objects.filter(sponsor_company=sponsor_company, username=generate_driver_points_report_form.cleaned_data.get('driver'))
 			# redirect to report page
 			driver_names = []

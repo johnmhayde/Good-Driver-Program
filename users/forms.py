@@ -130,7 +130,7 @@ class AcceptApplicationForm(forms.ModelForm):
 
 class GenerateDriverPointsReport(forms.Form):
 	driver_list = []
-	driver_list.append('None')
+	driver_list.append('All')
 	for driver in Driver.objects.all():
 		if driver_list.count(driver.username) == 0:
 			driver_list.append(driver.username)
