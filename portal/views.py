@@ -63,17 +63,17 @@ def driver_home(request):
     driver = driverGet(user)
     # send point history to page
     try:
-        point_hist = PointHist.objects.filter(username=user.username)
+        point_hist = PointHist.objects.filter(username=driver.username)
     except PointHist.DoesNotExist:
         point_hist = None
     # send application data to page
     try:
-        applications = Application.objects.filter(driver=user.username)
+        applications = Application.objects.filter(driver=driver.username)
     except Application.DoesNotExist:
         applications = None
     # get sponsors and point totals
     try:
-        sponsor_list = Sponsorship.objects.filter(driver=user.username)
+        sponsor_list = Sponsorship.objects.filter(driver=driver.username)
     except Sponsorship.DoesNotExist:
         sponsor_list = None
     data = {
@@ -286,8 +286,8 @@ def productListView(request, products_per_page, page_number, sponsor_company):
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
     print('user retrieved')
-    if userType == 'Driver':
-        driver = Driver.objects.get(username=user.username)
+    if userType == 'Driver' or userType == 'Sponsor':
+        driver = driverGet(user)
         #sponsor = Sponsor.objects.get(sponsor_company=sponsor_company)
         #search = sponsor.list_last_search
         #search = request.POST.get('search')
@@ -356,10 +356,10 @@ def driver_catalogs(request):
     user = request.user
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
-    if userType == 'Driver':
-        driver = Driver.objects.get(username=user.username)
+    if userType == 'Driver' or userType == 'Sponsor':
+        driver = driverGet(user)
 
-        sponsor_list = Sponsorship.objects.filter(driver=user.username)
+        sponsor_list = Sponsorship.objects.filter(driver=driver.username)
         #sponsor = Sponsor.objects.get(sponsor_company=driver.sponsor)
         sponsors = []
         for sponsor in sponsor_list:
@@ -379,17 +379,17 @@ def productDetailView(request, product_ID, sponsor_company):
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
     print('user retrieved')
-    if userType == 'Driver':
-        driver = Driver.objects.get(username=user.username)
-        sponsor = Sponsor.objects.get(sponsor_company=sponsor_company)
+    if userType == 'Driver' or userType == 'Sponsor':
+        driver = driverGet(user)
+        #sponsor = Sponsor.objects.get(sponsor_company=sponsor_company)
         product = Product.objects.get(idNum=product_ID)
         prodID = ''
         prodID = request.POST.get('product-chosen')
 
         if prodID != '' and prodID != None:
             print('Product ID received!')
-            if Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum=prodID).exists():
-                tempProduct = Product.objects.get(sponsor_company=sponsor.sponsor_company, idNum=prodID)
+            if Product.objects.filter(sponsor_company=sponsor_company, idNum=prodID).exists():
+                tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
                                                       price=tempProduct.priceRaw)
         parse1 = []
@@ -413,8 +413,8 @@ def Cart(request):
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
     print('user retrieved')
-    if userType == 'Driver':
-        driver = Driver.objects.get(username=user.username)
+    if userType == 'Driver' or userType == 'Sponsor':
+        driver = driverGet(user)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         for items in cartItems:
@@ -440,8 +440,8 @@ def Order_History(request):
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
     print('user retrieved')
-    if userType == 'Driver':
-        driver = Driver.objects.get(username=user.username)
+    if userType == 'Driver' or userType == 'Sponsor':
+        driver = driverGet(user)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=True)
         for items in cartItems:
@@ -469,8 +469,8 @@ def Order_Placed(request):
     user_placed_order = False
     pointTotal = 0
     print('user retrieved')
-    if userType == 'Driver':
-        driver = Driver.objects.get(username=user.username)
+    if userType == 'Driver' or userType == 'Sponsor':
+        driver = driverGet(user)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         for items in cartItems:
