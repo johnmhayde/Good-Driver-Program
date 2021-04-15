@@ -380,10 +380,10 @@ def productDetailView(request, product_ID, sponsor_company):
     user = request.user
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
+
     print('user retrieved')
-    if userType == 'Driver' or userType == 'Sponsor':
-        driver = driverGet(user)
-        #sponsor = Sponsor.objects.get(sponsor_company=sponsor_company)
+    if userType == 'Driver':
+        driver = Driver.objects.get(username=user.username)
         product = Product.objects.get(idNum=product_ID)
         prodID = ''
         prodID = request.POST.get('product-chosen')
@@ -391,9 +391,8 @@ def productDetailView(request, product_ID, sponsor_company):
         if prodID != '' and prodID != None:
             print('Product ID received!')
             if Product.objects.filter(sponsor_company=sponsor_company, idNum=prodID).exists():
-                tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
-                newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
-                                                      price=tempProduct.priceRaw)
+                newOrder = DriverOrder.objects.create(product=product, customer=driver, quantity=1,
+                                                      price=product.priceRaw)
         parse1 = []
         parse1.append(requests.get(
             'https://openapi.etsy.com/v2/listings/' + str(product.idNum) + '?api_key=pmewf48x56vb387qgsprzzry').json()[
@@ -401,7 +400,8 @@ def productDetailView(request, product_ID, sponsor_company):
         parse3 = parse1
         data = {
             'items': parse3,
-            'Driver': driver
+            'Driver': driver,
+            'sponsor_company':sponsor_company
         }
         response = render(request, 'portal/product_detail.html', data)
     else:
@@ -410,13 +410,25 @@ def productDetailView(request, product_ID, sponsor_company):
     return response
 
 
-def Cart(request):
+
+
+def Cart(request,page_number):
     user = request.user
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
+    currentproduct = 0
+    products_per_page = 8;
+    previous_page_number = page_number - 1
+    next_page_number = page_number + 1
+    paginated = False
+    previous_page = False
+    next_page = False
+    count = 0
+    page_low = (page_number - 1) * products_per_page
+    page_high = (page_number * products_per_page) - 1
     print('user retrieved')
-    if userType == 'Driver' or userType == 'Sponsor':
-        driver = driverGet(user)
+    if userType == 'Driver':
+        driver = Driver.objects.get(username=user.username)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         orderID = ''
@@ -425,14 +437,36 @@ def Cart(request):
         if orderID != '' and orderID != None:
             order = DriverOrder.objects.get(customer=driver,id=orderID).delete()
         for items in cartItems:
-            parse1 = requests.get(
-                'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
-                '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
-            items.productName = parse1.get('title')
-            orders.append(items)
+            if page_low <= currentproduct <= page_high:
+                currentproduct = currentproduct + 1
+                parse1 = requests.get(
+                    'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
+                    '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
+                items.productName = parse1.get('title')
+                orders.append(items)
+            else:
+                currentproduct = currentproduct + 1
+        if currentproduct > products_per_page:
+            paginated = True
+
+        if page_number == 1:
+            previous_page = False
+        else:
+            previous_page = True
+
+        if page_high >= currentproduct:
+            next_page = False
+        else:
+            next_page = True
 
         data = {
-            'cartItems': orders
+            'cartItems': orders,
+            'paginated': paginated,
+            'previous': previous_page,
+            'next': next_page,
+            'current_page_number': page_number,
+            'previous_page_number': previous_page_number,
+            'next_page_number': next_page_number,
         }
         response = render(request, 'portal/cart.html', data)
     else:
@@ -440,31 +474,77 @@ def Cart(request):
 
     return response
 
-
-def Order_History(request):
+def Order_History(request,page_number):
     user = request.user
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
+    currentproduct = 0
+    products_per_page = 8;
+    previous_page_number = page_number - 1
+    next_page_number = page_number + 1
+    paginated = False
+    previous_page = False
+    next_page = False
+    count = 0
+    page_low = (page_number - 1) * products_per_page
+    page_high = (page_number * products_per_page) - 1
     print('user retrieved')
-    if userType == 'Driver' or userType == 'Sponsor':
-        driver = driverGet(user)
+    if userType == 'Driver':
+        driver = Driver.objects.get(username=user.username)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=True)
+        orderID = ''
+        orderID = request.POST.get('product-chosen')
+
+        if orderID != '' and orderID != None:
+            order = DriverOrder.objects.get(customer=driver, id=orderID)
+            itemsponsor = Sponsorship.objects.get(sponsor_company=order.product.sponsor_company, driver=driver.username)
+            temp = itemsponsor.driver_points + (itemsponsor.price_scalar * order.price)
+            itemsponsor.driver_points = temp
+            itemsponsor.save()
+            order.status = False
+            order.save()
+            cartItems = DriverOrder.objects.filter(customer=driver, status=True)
         for items in cartItems:
-            parse1 = requests.get(
-                'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
-                '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
-            items.productName = parse1.get('title')
-            orders.append(items)
+            if page_low <= currentproduct <= page_high:
+                currentproduct = currentproduct + 1
+                parse1 = requests.get(
+                    'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
+                    '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
+                items.productName = parse1.get('title')
+                orders.append(items)
+            else:
+                currentproduct = currentproduct + 1
+
+
+        if currentproduct > products_per_page:
+            paginated = True
+
+        if page_number == 1:
+            previous_page = False
+        else:
+            previous_page = True
+
+        if page_high >= currentproduct:
+            next_page = False
+        else:
+            next_page = True
 
         data = {
-            'cartItems': orders
+            'cartItems': orders,
+            'paginated': paginated,
+            'previous': previous_page,
+            'next': next_page,
+            'current_page_number': page_number,
+            'previous_page_number': previous_page_number,
+            'next_page_number': next_page_number,
         }
         response = render(request, 'portal/Order_History.html', data)
     else:
         response = redirect('home')
 
     return response
+
 
 
 def Order_Placed(request):
@@ -474,8 +554,8 @@ def Order_Placed(request):
     user_placed_order = False
     user_out_of_points = False
     print('user retrieved')
-    if userType == 'Driver' or userType == 'Sponsor':
-        driver = driverGet(user)
+    if userType == 'Driver':
+        driver = Driver.objects.get(username=user.username)
         orders = []
         cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         for items in cartItems:

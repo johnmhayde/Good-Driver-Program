@@ -20,13 +20,32 @@
 				<td>{{ item.product.sponsor_company }}</td>
 				<td>{{ item.price }}</td>
 				<td>{{ item.date }}</td>
-				<td></td>
+				<td>
+					<form action="{% url 'Order-History' current_page_number %}" method="post">
+							{% csrf_token %}
+							<button id="product-chosen" type="submit" name="product-chosen" value="{{ item.id }}"  class="btn btn-success">Cancel Order</button>
+						</form>
+				</td>
 			</tr>
 
 	{% endfor %}
 		</tbody>
     </table>
+{% if paginated %}
+	<div class="row">
+		{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' previous_page_number %}">Previous</a>
+		{%endif%}
+		{% if next %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' next_page_number %}">Next</a>
+		{%endif%}
+	</div>
+{%endif%}
 {% else %}
-	<p class="text-secondary">No Orders placed</p>
-	{% endif %}
+	{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' previous_page_number %}">Previous</a>
+	{% else %}
+		<p class="text-secondary">No Orders placed</p>
+	{%endif%}
+{% endif %}
 {% endblock content%}
