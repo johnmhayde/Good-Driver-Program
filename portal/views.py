@@ -471,37 +471,37 @@ def Cart(request,page_number):
             response = redirect('Order-Placed')
         else:
             for items in cartItems:
-            if page_low <= currentproduct <= page_high:
-                currentproduct = currentproduct + 1
-                parse1 = requests.get(
-                    'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
-                    '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
-                items.productName = parse1.get('title')
-                orders.append(items)
-            else:
-                currentproduct = currentproduct + 1
-        if currentproduct > products_per_page:
-            paginated = True
+                if page_low <= currentproduct <= page_high:
+                    currentproduct = currentproduct + 1
+                    parse1 = requests.get(
+                        'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
+                        '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
+                    items.productName = parse1.get('title')
+                    orders.append(items)
+                else:
+                    currentproduct = currentproduct + 1
+                if currentproduct > products_per_page:
+                    paginated = True
 
-        if page_number == 1:
-            previous_page = False
-        else:
-            previous_page = True
+                if page_number == 1:
+                    previous_page = False
+                else:
+                    previous_page = True
 
-        if page_high >= currentproduct:
-            next_page = False
-        else:
-            next_page = True
+                if page_high >= currentproduct:
+                    next_page = False
+                else:
+                    next_page = True
 
             data = {
-                'cartItems': orders,
-                'driver':driver,
-                'paginated': paginated,
-                'previous': previous_page,
-                'next': next_page,
-                'current_page_number': page_number,
-                'previous_page_number': previous_page_number,
-                'next_page_number': next_page_number,
+                    'cartItems': orders,
+                    'driver':driver,
+                    'paginated': paginated,
+                    'previous': previous_page,
+                    'next': next_page,
+                    'current_page_number': page_number,
+                    'previous_page_number': previous_page_number,
+                    'next_page_number': next_page_number,
             }
             response = render(request, 'portal/cart.html', data)
     else:
