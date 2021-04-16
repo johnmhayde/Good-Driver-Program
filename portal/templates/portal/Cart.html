@@ -24,8 +24,9 @@
 				<td>{{ item.sponsor_company }}</td>
 				<td>{{ item.price }}</td>
 				<td>{{ item.date }}</td>
+				<td>{{ item.date }}</td>
 				<td>
-					<form action="{% url 'Cart' %}" method="post">
+					<form action="{% url 'Cart' current_page_number %}" method="post">
 							{% csrf_token %}
 							<button id="product-chosen" type="submit" name="product-chosen" value="{{ item.id }}"  class="btn btn-success">Remove from Cart</button>
 					</form>
@@ -51,7 +52,21 @@
 				</tr>
 		</tbody>
 	</table>
+{% if paginated %}
+	<div class="row">
+		{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Cart' previous_page_number %}">Previous</a>
+		{%endif%}
+		{% if next %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Cart' next_page_number %}">Next</a>
+		{%endif%}
+	</div>
+{%endif%}
 {% else %}
-	<p class="text-secondary">No Products In the cart</p>
-	{% endif %}
+	{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Cart' previous_page_number  %}">Previous</a>
+	{% else %}
+		<p class="text-secondary">No Orders placed</p>
+	{%endif%}
+{% endif %}
 {% endblock content%}

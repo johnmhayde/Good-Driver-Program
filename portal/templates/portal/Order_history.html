@@ -34,7 +34,21 @@
 	{% endfor %}
 		</tbody>
     </table>
+{% if paginated %}
+	<div class="row">
+		{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' previous_page_number %}">Previous</a>
+		{%endif%}
+		{% if next %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' next_page_number %}">Next</a>
+		{%endif%}
+	</div>
+{%endif%}
 {% else %}
-	<p class="text-secondary">No Orders placed</p>
-	{% endif %}
+	{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' previous_page_number %}">Previous</a>
+	{% else %}
+		<p class="text-secondary">No Orders placed</p>
+	{%endif%}
+{% endif %}
 {% endblock content%}
