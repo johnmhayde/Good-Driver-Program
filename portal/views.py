@@ -503,7 +503,7 @@ def Cart(request,page_number):
                     'previous_page_number': previous_page_number,
                     'next_page_number': next_page_number,
             }
-            response = render(request, 'portal/cart.html', data)
+            response = render(request, 'portal/Cart.html', data)
     else:
         response = redirect('home')
 
@@ -585,6 +585,8 @@ def Order_History(request,page_number):
             'current_page_number': page_number,
             'previous_page_number': previous_page_number,
             'next_page_number': next_page_number,
+            'driver': driver,
+            'realDriver':(userType == 'Driver'),
         }
         response = render(request, 'portal/Order_History.html', data)
     else:

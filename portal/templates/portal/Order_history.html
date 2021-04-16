@@ -25,7 +25,7 @@
 				<td>{{ item.price }}</td>
 				<td>{{ item.date }}</td>
 				<td>{{ item.orderStatus }}</td>
-				<td><form action="{% url 'Order-History' %}" method="post">
+				<td><form action="{% url 'Order-History'  current_page_number %}" method="post">
 					{% csrf_token %}
 					<button id="cancel-order" type="submit" name="cancel-order" value="{{ item.id }}" class="btn btn-success">Cancel Order</button>
 				</form></td>

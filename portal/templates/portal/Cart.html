@@ -44,7 +44,7 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><form action="{% url 'Cart' %}" method="post">
+				<td><form action="{% url 'Cart' current_page_number %}" method="post">
 					{% csrf_token %}
 					<button id="place-order-override" type="submit" name="place-order-override" value="{{ 1 }}" class="btn btn-success">Place Order (Override)</button>
 					</form></td>
