@@ -1,9 +1,12 @@
 {% extends "portal/base_driver.html" %}
 {% block content %}
 <div class="row">
-		<div class="col-md-12">
-			<h1>Cart</h1>
-		</div>
+	<div class="col-md-12">
+		<h1>Cart</h1>
+		{% if not realDriver %}
+			<p class="text-secondary">Viewing as {{driver.first_name}} {{driver.last_name}}</p>
+		{% endif %}
+	</div>
 </div>
 {%if cartItems%}
 <table class="table">
@@ -17,14 +20,15 @@
 	<tbody>
 			<tr>
 				<td>{{ item.productName }}</td>
-				<td>{{ item.product.sponsor_company }}</td>
+				<!--<td>{{ item.product.sponsor_company }}</td>-->
+				<td>{{ item.sponsor_company }}</td>
 				<td>{{ item.price }}</td>
 				<td>{{ item.date }}</td>
 				<td>
 					<form action="{% url 'Cart' %}" method="post">
 							{% csrf_token %}
 							<button id="product-chosen" type="submit" name="product-chosen" value="{{ item.id }}"  class="btn btn-success">Remove from Cart</button>
-						</form>
+					</form>
 				</td>
 			</tr>
 
@@ -39,7 +43,10 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td></td>
+				<td><form action="{% url 'Cart' %}" method="post">
+					{% csrf_token %}
+					<button id="place-order-override" type="submit" name="place-order-override" value="{{ 1 }}" class="btn btn-success">Place Order (Override)</button>
+					</form></td>
 
 				</tr>
 		</tbody>

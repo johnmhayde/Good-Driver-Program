@@ -60,20 +60,35 @@ def register(request):
 def driver_home(request):
     # send driver info to page
     user = request.user
+    gUser = GenericUser.objects.get(username=user.username)
+    userType = gUser.type
+    if userType == 'Sponsor':
+        print('Driver name is: \''+Sponsor.objects.get(username=user.username).driver_vicarious+'\'')
+    if userType == 'Sponsor' and not Driver.objects.filter(username=Sponsor.objects.get(username=user.username).driver_vicarious).exists():
+        return redirect('select-driver')
     driver = driverGet(user)
     # send point history to page
     try:
-        point_hist = PointHist.objects.filter(username=driver.username)
+        if userType == 'Sponsor':
+            point_hist = PointHist.objects.filter(username=driver.username,sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            point_hist = PointHist.objects.filter(username=driver.username)
     except PointHist.DoesNotExist:
         point_hist = None
     # send application data to page
     try:
-        applications = Application.objects.filter(driver=driver.username)
+        if userType == 'Sponsor':
+            applications = Application.objects.filter(driver=driver.username,sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            applications = Application.objects.filter(driver=driver.username)
     except Application.DoesNotExist:
         applications = None
     # get sponsors and point totals
     try:
-        sponsor_list = Sponsorship.objects.filter(driver=driver.username)
+        if userType == 'Sponsor':
+            sponsor_list = Sponsorship.objects.filter(driver=driver.username,sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            sponsor_list = Sponsorship.objects.filter(driver=driver.username)
     except Sponsorship.DoesNotExist:
         sponsor_list = None
     data = {
@@ -87,6 +102,7 @@ def driver_home(request):
         'applications': applications,
         'sponsor': driver.sponsor,
         'sponsor_list': sponsor_list,
+        'realDriver': (userType == 'Driver'),
 
     }
 
@@ -299,7 +315,7 @@ def productListView(request, products_per_page, page_number, sponsor_company):
             if Product.objects.filter(sponsor_company=sponsor_company, idNum=prodID).exists():
                 tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
-                                                      price=tempProduct.priceRaw)
+                                                      price=tempProduct.priceRaw,sponsor_company=sponsor_company)
         listed_products = Product.objects.filter(sponsor_company=sponsor_company)
 
         parse1 = []
@@ -345,7 +361,8 @@ def productListView(request, products_per_page, page_number, sponsor_company):
             'current_page_number': page_number,
             'previous_page_number': previous_page_number,
             'next_page_number': next_page_number,
-            'products_per_page': products_per_page
+            'products_per_page': products_per_page,
+            'realDriver': (userType == 'Driver'),
         }
         response = render(request, 'portal/driver_product_home.html', data)
     else:
@@ -360,7 +377,10 @@ def driver_catalogs(request):
     if userType == 'Driver' or userType == 'Sponsor':
         driver = driverGet(user)
 
-        sponsor_list = Sponsorship.objects.filter(driver=driver.username)
+        if userType == 'Sponsor':
+            sponsor_list = Sponsorship.objects.filter(driver=driver.username,sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            sponsor_list = Sponsorship.objects.filter(driver=driver.username)
         #sponsor = Sponsor.objects.get(sponsor_company=driver.sponsor)
         sponsors = []
         for sponsor in sponsor_list:
@@ -393,7 +413,7 @@ def productDetailView(request, product_ID, sponsor_company):
             if Product.objects.filter(sponsor_company=sponsor_company, idNum=prodID).exists():
                 tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
-                                                      price=tempProduct.priceRaw)
+                                                      price=tempProduct.priceRaw, sponsor_company=sponsor_company)
         parse1 = []
         parse1.append(requests.get(
             'https://openapi.etsy.com/v2/listings/' + str(product.idNum) + '?api_key=pmewf48x56vb387qgsprzzry').json()[
@@ -418,23 +438,37 @@ def Cart(request):
     if userType == 'Driver' or userType == 'Sponsor':
         driver = driverGet(user)
         orders = []
-        cartItems = DriverOrder.objects.filter(customer=driver, status=False)
+        if userType == 'Sponsor':
+            cartItems = DriverOrder.objects.filter(customer=driver, status=False,sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         orderID = ''
         orderID = request.POST.get('product-chosen')
 
         if orderID != '' and orderID != None:
             order = DriverOrder.objects.get(customer=driver,id=orderID).delete()
-        for items in cartItems:
-            parse1 = requests.get(
-                'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
-                '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
-            items.productName = parse1.get('title')
-            orders.append(items)
+            
+        orderID = ''
+        orderID = request.POST.get('place-order-override')
 
-        data = {
-            'cartItems': orders
-        }
-        response = render(request, 'portal/cart.html', data)
+        if orderID != '' and orderID != None:
+            for item in cartItems:
+                item.orderStatus = 'OVERRIDE'
+                item.save()
+            response = redirect('Order-Placed')
+        else:
+            for items in cartItems:
+                parse1 = requests.get(
+                    'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
+                    '?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]
+                items.productName = parse1.get('title')
+                orders.append(items)
+
+            data = {
+                'cartItems': orders,
+                'driver':driver,
+            }
+            response = render(request, 'portal/cart.html', data)
     else:
         response = redirect('home')
 
@@ -448,8 +482,19 @@ def Order_History(request):
     print('user retrieved')
     if userType == 'Driver' or userType == 'Sponsor':
         driver = driverGet(user)
+        orderID = ''
+        orderID = request.POST.get('cancel-order')
+
+        if orderID != '' and orderID != None:
+            order = DriverOrder.objects.get(customer=driver,id=orderID)
+            order.orderStatus = 'Cancelled'
+            order.save()
         orders = []
-        cartItems = DriverOrder.objects.filter(customer=driver, status=True)
+        if userType == 'Sponsor':
+            cartItems = DriverOrder.objects.filter(customer=driver, status=True, sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            cartItems = DriverOrder.objects.filter(customer=driver, status=True)
+        print("Retrieved "+str(len(cartItems))+" items")
         for items in cartItems:
             parse1 = requests.get(
                 'https://openapi.etsy.com/v2/listings/' + str(items.product.idNum) +
@@ -458,7 +503,9 @@ def Order_History(request):
             orders.append(items)
 
         data = {
-            'cartItems': orders
+            'cartItems': orders,
+            'realDriver': (userType == 'Driver'),
+            'driver': driver,
         }
         response = render(request, 'portal/Order_History.html', data)
     else:
@@ -477,14 +524,19 @@ def Order_Placed(request):
     if userType == 'Driver' or userType == 'Sponsor':
         driver = driverGet(user)
         orders = []
-        cartItems = DriverOrder.objects.filter(customer=driver, status=False)
+        wasOverride = False
+        if userType == 'Sponsor':
+            cartItems = DriverOrder.objects.filter(customer=driver, status=False, sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
+        else:
+            cartItems = DriverOrder.objects.filter(customer=driver, status=False)
         for items in cartItems:
             orders.append(items)
 
-        #    temp = DriverOrder.objects.filter(customer=driver, status=False).delete()
         for order in orders:
             itemsponsor = Sponsorship.objects.get(sponsor_company=order.product.sponsor_company, driver=driver.username)
-            temp = itemsponsor.driver_points - (itemsponsor.price_scalar * order.price)
+            temp = itemsponsor.driver_points - (itemsponsor.price_scalar * order.price * int(order.orderStatus != 'OVERRIDE'))
+            if order.orderStatus == 'OVERRIDE':
+                wasOverride = True
             if temp < 0:
                 user_out_of_points = True
             else:
@@ -494,6 +546,10 @@ def Order_Placed(request):
 
         if not user_out_of_points:
             for order in orders:
+                if order.orderStatus == 'OVERRIDE':
+                    order.orderStatus = 'Order Placed By Override'
+                else:
+                    order.orderStatus = 'Order Placed'
                 order.save()
         else:
             for order in orders:
@@ -503,10 +559,12 @@ def Order_Placed(request):
                     temp = itemsponsor.driver_points + (itemsponsor.price_scalar * order.price)
                     itemsponsor.driver_points = temp
                     itemsponsor.save()
-        #     temp = DriverOrder.objects.create(product=order.product, customer=order.customer, quantity=order.quantity, price=order.price,status=True)
+
         data = {
             'placed': user_placed_order,
-            'oop': user_out_of_points
+            'oop': user_out_of_points,
+            'realDriver': (userType == 'Driver'),
+            'wasOverride': wasOverride
         }
         response = render(request, 'portal/Order_Placed.html', data)
     else:

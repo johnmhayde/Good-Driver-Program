@@ -3,6 +3,9 @@
 <div class="row">
 		<div class="col-md-12">
 			<h1>Order History</h1>
+			{% if not realDriver %}
+				<p class="text-secondary">For {{driver.first_name}} {{driver.last_name}}, from your company</p>
+			{% endif %}
 		</div>
 </div>
 {%if cartItems%}
@@ -12,6 +15,7 @@
 			<th scope="col">Sponsor</th>
 			<th scope="col">Price</th>
 			<th scope="col">Date Placed</th>
+			<th scope="col">Order Status</th>
 		</tr>
 	{% for item in cartItems reversed %}
 	<tbody>
@@ -20,7 +24,11 @@
 				<td>{{ item.product.sponsor_company }}</td>
 				<td>{{ item.price }}</td>
 				<td>{{ item.date }}</td>
-				<td></td>
+				<td>{{ item.orderStatus }}</td>
+				<td><form action="{% url 'Order-History' %}" method="post">
+					{% csrf_token %}
+					<button id="cancel-order" type="submit" name="cancel-order" value="{{ item.id }}" class="btn btn-success">Cancel Order</button>
+				</form></td>
 			</tr>
 
 	{% endfor %}

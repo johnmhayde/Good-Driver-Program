@@ -21,17 +21,21 @@
 		{% for driver in drivers %}
 		<tbody>
 			<tr>
-				<td><img class="Product-Image" src="{{driver.profile_photo}}" width="170" height="135"> </td>
-				<!--<td><img class="Product-Image" src="{{item.image}}" width="170" height="135"> </td>-->
+				<td><img class="Product-Image" src="{{driver.profile_photo.url}}" width="170" height="auto"> </td>
+				<!--<td><img class="rounded-circle account-img" width="10%" height="auto" src="{{ driver.profile_photo.url }}"> </td>-->
 				<td>{{ driver.username }}</td>
 				<td>{{ driver.first_name }}</td>
 				<td>{{ driver.last_name }}</td>
+				{% if driver.username != current_driver %}
 				<td>
 					<form action="{% url 'select-driver' %}" method="post">
 						{% csrf_token %}
 						<button id="driver-username" type="submit" name="driver-username" value="{{ driver.username }}" class="btn btn-success">View as</button>
 					</form>
 				</td>
+				{% else %}
+				<td>Viewing As</td>
+				{% endif %}
 			</tr>
 		</tbody>
 		{% endfor %}

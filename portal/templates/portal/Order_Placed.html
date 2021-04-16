@@ -13,9 +13,19 @@
 </div>
 {%else%}
 <div class="row">
+	{% if wasOverride %}
+		<div class="col-md-12">
+			<h1>Override Order Placed Successfully</h1>
+		</div>
+	{% else %}
 		<div class="col-md-12">
 			<h1>Order Placed Successfully</h1>
 		</div>
+	{% endif %}
+	<form action="{% url 'Order-History' %}" method="post">
+		{% csrf_token %}
+		<button id="product-chosen" type="submit" name="product-chosen" value="bruh" class="btn btn-success">Go to Orders</button>
+	</form>
 </div>
 	{% endif %}
 {% endblock content%}

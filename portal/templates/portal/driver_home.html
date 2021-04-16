@@ -8,7 +8,11 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
+			{% if realDriver %}
+				<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
+			{% else %}
+				<h2 class="account-heading">Viewing as {{ first_name }} {{ last_name }}</h2>
+			{% endif %}
 			<div class="content-section">
 				<div class="media-body">
 					<img class="rounded-circle account-img" width="70%" height="auto" src="{{ profile_photo }}">

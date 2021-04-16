@@ -3,11 +3,14 @@
 
 <div class="row">
 		<div class="col-md-12">
-			<h1>Product Page!</h1>
-			<form action = "{url 'searchbar'}" method = "get">
+			<h1>Product Page - {{ sponsor_company }}!</h1>
+			{% if not realDriver %}
+				<p class="text-secondary">(That's your company!)</p>
+			{% endif %}
+			<!--<form action = "{url 'searchbar'}" method = "get">
                 <input type = "text" name = "search"/>
                 <button type = "submit">Search</button>
-            </form>
+            </form>-->
 		</div>
 	</div>
 <div class ="row">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Driver, GenericUser, Sponsor, PointHist, GenericAdmin, Application, Sponsorship, Product
+from .models import Driver, GenericUser, Sponsor, PointHist, GenericAdmin, Application, Sponsorship, Product, DriverOrder
 
 class AdminDriver(admin.ModelAdmin):
 	model = Driver
@@ -32,6 +32,10 @@ class AdminProduct(admin.ModelAdmin):
 	model = Product
 	list_display = ('sponsor_company', 'idNum', 'priceRaw')
 
+class AdminDriverOrder(admin.ModelAdmin):
+	model = Product
+	list_display = ('productName','sponsor_company', 'price', 'date')
+
 admin.site.register(Driver, AdminDriver)
 admin.site.register(GenericUser, AdminGenericUser)
 admin.site.register(Sponsor, AdminSponsor)
@@ -40,3 +44,4 @@ admin.site.register(GenericAdmin, AdminAdmin)
 admin.site.register(Application, ApplicationHist)
 admin.site.register(Sponsorship, SponsorshipHist)
 admin.site.register(Product, AdminProduct)
+admin.site.register(DriverOrder, AdminDriverOrder)
