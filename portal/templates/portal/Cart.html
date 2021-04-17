@@ -15,6 +15,7 @@
 			<th scope="col">Sponsor</th>
 			<th scope="col">Price</th>
 			<th scope="col">Date Placed</th>
+			<th scope="col"></th>
 		</tr>
 	{% for item in cartItems reversed %}
 	<tbody>
@@ -23,7 +24,6 @@
 				<!--<td>{{ item.product.sponsor_company }}</td>-->
 				<td>{{ item.sponsor_company }}</td>
 				<td>{{ item.price }}</td>
-				<td>{{ item.date }}</td>
 				<td>{{ item.date }}</td>
 				<td>
 					<form action="{% url 'Cart' current_page_number %}" method="post">
@@ -44,10 +44,17 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><form action="{% url 'Cart' current_page_number %}" method="post">
-					{% csrf_token %}
-					<button id="place-order-override" type="submit" name="place-order-override" value="{{ 1 }}" class="btn btn-success">Place Order (Override)</button>
-					</form></td>
+				
+				<td>
+					{% if realDriver is False %}
+					<form action="{% url 'Cart' current_page_number %}" method="post">
+						{% csrf_token %}
+						<button id="place-order-override" type="submit" name="place-order-override" value="{{ 1 }}" class="btn btn-success">Place Order (Override)</button>
+					</form>
+					{% endif %}
+
+				</td>
+				
 
 				</tr>
 		</tbody>

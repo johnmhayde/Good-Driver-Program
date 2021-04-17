@@ -315,7 +315,7 @@ def productListView(request, products_per_page, page_number, sponsor_company):
             if Product.objects.filter(sponsor_company=sponsor_company, idNum=prodID).exists():
                 tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
-                                                      price=tempProduct.priceRaw,sponsor_company=sponsor_company)
+                                                      price=int(tempProduct.priceRaw/Sponsorship.objects.get(driver=driver.username,sponsor_company=sponsor_company).price_scalar),sponsor_company=sponsor_company)
         listed_products = Product.objects.filter(sponsor_company=sponsor_company)
 
         parse1 = []
@@ -350,6 +350,11 @@ def productListView(request, products_per_page, page_number, sponsor_company):
                 x['title'] = x['title'][0:49] + '...'
             if len(x['description']) > 250:
                 x['description'] = x['description'][0:249] + '...'
+            x['price']=str(int(round(float(x['price'])/Sponsorship.objects.get(driver=driver.username,sponsor_company=sponsor_company).price_scalar)))
+            if x['price']=='1':
+                x['price']+=" point"
+            else:
+                x['price']+=" points"
 
         data = {
             'sponsor_company': sponsor_company,
@@ -502,6 +507,7 @@ def Cart(request,page_number):
                     'current_page_number': page_number,
                     'previous_page_number': previous_page_number,
                     'next_page_number': next_page_number,
+                    'realDriver': (userType == 'Driver'),
             }
             response = render(request, 'portal/Cart.html', data)
     else:
@@ -524,6 +530,7 @@ def Order_History(request,page_number):
     page_low = (page_number - 1) * products_per_page
     page_high = (page_number * products_per_page) - 1
     print('user retrieved')
+
     if userType == 'Driver' or userType == 'Sponsor':
         driver = driverGet(user)
         #orderID = ''
@@ -533,12 +540,14 @@ def Order_History(request,page_number):
         #    order = DriverOrder.objects.get(customer=driver,id=orderID)
         #    order.orderStatus = 'Cancelled'
         #    order.save()
+
         orders = []
         if userType == 'Sponsor':
             cartItems = DriverOrder.objects.filter(customer=driver, status=True, sponsor_company=Sponsor.objects.get(username=user.username).sponsor_company)
         else:
             cartItems = DriverOrder.objects.filter(customer=driver, status=True)
         print("Retrieved "+str(len(cartItems))+" items")
+
         orderID = ''
         orderID = request.POST.get('cancel-order')
 
@@ -548,11 +557,15 @@ def Order_History(request,page_number):
             temp = itemsponsor.driver_points + (itemsponsor.price_scalar * order.price)
             itemsponsor.driver_points = temp
             itemsponsor.save()
-            order.status = False
+            #order.status = False
             order.orderStatus = 'Cancelled'
             order.save()
             cartItems = DriverOrder.objects.filter(customer=driver, status=True)
+
         for items in cartItems:
+            #if items.orderStatus == '':
+            #    items.orderStatus = 'Order Placed'
+            #    items.save()
             if page_low <= currentproduct <= page_high:
                 currentproduct = currentproduct + 1
                 parse1 = requests.get(
@@ -562,7 +575,6 @@ def Order_History(request,page_number):
                 orders.append(items)
             else:
                 currentproduct = currentproduct + 1
-
 
         if currentproduct > products_per_page:
             paginated = True
@@ -616,7 +628,7 @@ def Order_Placed(request):
 
         for order in orders:
             itemsponsor = Sponsorship.objects.get(sponsor_company=order.product.sponsor_company, driver=driver.username)
-            temp = itemsponsor.driver_points - (itemsponsor.price_scalar * order.price * int(order.orderStatus != 'OVERRIDE'))
+            temp = itemsponsor.driver_points - ((order.price * int(order.orderStatus != 'OVERRIDE'))/itemsponsor.price_scalar)
             if order.orderStatus == 'OVERRIDE':
                 wasOverride = True
             if temp < 0:
