@@ -3,7 +3,6 @@
 	<div class="row">
 		<div class="col-md-12 d-flex justify-content-center">
 			<h1 style="text-decoration: underline;">Sponsor Home</h1>
-			<!-- TODO: WANT TO ADD IN SPONSOR NAME HERE, SOME KIND OF WELCOME MESSAGE WOULD BE NICE -->
 		</div>
 	</div>
 
@@ -49,6 +48,7 @@
 					<th scope="col">Driver Username</th>
 					<th scope="col">Number of Points</th>
 					<th scope="col">Edit Points</th>
+					<th scope="col">Edit Points Rate</th>
 
 				</tr>
 				{% for item in my_drivers reversed %}
@@ -58,6 +58,12 @@
 							<td>{{ item.driver_points }}</td>
 							<td>
 								<form action="{% url 'update-points' %}" method="POST">
+									{% csrf_token %}
+									<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Edit</button>
+								</form>
+							</td>
+							<td>
+								<form action="{% url 'update-points-rate' %}" method="POST">
 									{% csrf_token %}
 									<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Edit</button>
 								</form>

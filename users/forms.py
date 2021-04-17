@@ -1,5 +1,5 @@
 from django import forms
-from .models import Driver, Sponsor, GenericAdmin, Application, PointHist
+from .models import Driver, Sponsor, GenericAdmin, Application, PointHist, Sponsorship
 from PIL import Image
 
 # create a custom form for the Driver Model
@@ -114,6 +114,13 @@ class EditPointsForm(forms.ModelForm):
 	class Meta:
 		model = PointHist
 		fields = ['points', 'reason']
+
+class EditPointsRateForm(forms.ModelForm):
+	model = Sponsorship
+	# deliver only editable content to the page
+	class Meta:
+		model = Sponsorship
+		fields = ['price_scalar']
 
 class ApplicationForm(forms.Form):
 	sponsor_list = []

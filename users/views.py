@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm, AcceptApplicationForm, GenerateDriverPointsReport
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm, AcceptApplicationForm, GenerateDriverPointsReport, EditPointsRateForm
 from .models import GenericUser, Driver, Sponsor, Application, PointHist, Sponsorship
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -94,6 +94,36 @@ def update_driver_points(request):
 			# update drive points in sponsorships
 			sponsorship = Sponsorship.objects.get(driver = request.POST.get("driver_username"), sponsor_company=pointhist.sponsor_company)
 			sponsorship.driver_points += points
+			sponsorship.save()
+			messages.success(request, f"Your Driver's account has been updated")
+			return redirect('sponsor-home')
+
+	context = {
+		'driver_points_form' : driver_points_form,
+		'driver' : driver
+	}
+	return render(request, 'users/edit_points.html' , context)
+
+def update_driver_points_rate(request):
+	driver = Driver.objects.get(username=request.POST.get("driver_username"))
+	if request.method == 'POST':
+		driver_points_form = EditPointsRateForm(request.POST, instance=driver)
+		if driver_points_form.is_valid():
+			# update point hist
+			#points = driver_points_form.cleaned_data.get('points')
+			#reason = driver_points_form.cleaned_data.get('reason')
+			#pointhist = PointHist.objects.create()
+			#pointhist.username = driver.username
+			#pointhist.sponsor_username = Sponsor.objects.get(username = request.user.username).username
+			#pointhist.sponsor_company = Sponsor.objects.get(username = request.user.username).sponsor_company
+			#pointhist.date = date.today().strftime("%m/%d/%Y")
+			#pointhist.points = points
+			#pointhist.reason = reason
+			#pointhist.save()
+			## update drive points in sponsorships
+			sponsorship = Sponsorship.objects.get(driver = request.POST.get("driver_username"), sponsor_company=Sponsor.objects.get(username=request.user.username).sponsor_company)
+			#sponsorship.driver_points += points
+			sponsorship.price_scalar = driver_points_form.cleaned_data.get('price_scalar')
 			sponsorship.save()
 			messages.success(request, f"Your Driver's account has been updated")
 			return redirect('sponsor-home')
