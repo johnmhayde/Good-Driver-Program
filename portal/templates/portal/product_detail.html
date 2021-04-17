@@ -6,17 +6,17 @@
 			<h1>{{item.title}}</h1>
 		</div>
 </div>
-<div class="row">
-    <img class="Product-Image" src="{{item.image}}" width="170" height="135">
+<div style="text-align: center;">
+    <img class="Product-Image" src="{{item.image}}" width="400" height="400">
 </div>
 <div class="row">
 	<div class="col-md-10">
-			<h1>{{item.description}}</h1>
+			<a>{{item.description}}</a>
 		</div>
 </div>
 <div class="row">
 	<div class="col-md-10">
-			<h1>{{item.price}}{{item.currency_code}}</h1>
+			<a>{{item.price}} points</a>
 		</div>
 </div>
 <form action="{% url 'product-detail' item.listing_id sponsor_company %}" method="post">
