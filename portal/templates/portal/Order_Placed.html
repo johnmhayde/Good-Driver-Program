@@ -22,7 +22,7 @@
 			<h1>Order Placed Successfully</h1>
 		</div>
 	{% endif %}
-	<form action="{% url 'Order-History' 1 %}" method="post">
+	<form action="{% url 'Order-History' %}" method="post">
 		{% csrf_token %}
 		<button id="product-chosen" type="submit" name="product-chosen" value="bruh" class="btn btn-success">Go to Orders</button>
 	</form>
