@@ -136,10 +136,10 @@ class AcceptApplicationForm(forms.ModelForm):
 		fields = ['status', 'reason']
 
 class GenerateDriverPointsReport(forms.Form):
-	driver_list = []
-	driver_list.append('All')
-	for driver in Driver.objects.all():
-		if driver_list.count(driver.username) == 0:
-			driver_list.append(driver.username)
-	driver = forms.ChoiceField(label="Select a driver from the list: ", choices=[tuple([driver, driver]) for driver in driver_list])
+	# driver_list = []
+	# driver_list.append('All')
+	# for driver in Driver.objects.all():
+	# 	if driver_list.count(driver.username) == 0:
+	# 		driver_list.append(driver.username)
+	driver = forms.ChoiceField(label="Select a driver from the list: ", choices=["driver", "driver"]) # tuple([driver, driver]) for driver in driver_list])
 	date_range = forms.ChoiceField(label="Select a date range: ", choices=[tuple(['day', 'Past Day']), tuple(['week', 'Past Week']), tuple(['month', 'Past Month']), tuple(['all', 'All'])])
