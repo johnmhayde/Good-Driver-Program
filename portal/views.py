@@ -603,7 +603,7 @@ def Order_History(request,page_number):
             'driver': driver,
             'realDriver':(userType == 'Driver'),
         }
-        response = render(request, 'portal/Order_History.html', data)
+        response = render(request, 'portal/Order_history.html', data)
     else:
         response = redirect('home')
 
