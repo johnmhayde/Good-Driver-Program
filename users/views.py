@@ -174,7 +174,8 @@ def application(request):
 
 	if application != '' and application != None:
 		if Application.objects.filter(driver=driver.username,sponsor_company=application).exists() == False:
-			Application.objects.create(driver=driver.username,sponsor_company=application, status="Pending")
+			Application.objects.create(driver=driver.username,sponsor_company=application, status = "Pending")
+			messages.success(request, f"Application submitted!")
 
 	companies=[]
 	for sponsor in Sponsor.objects.all():
