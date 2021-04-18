@@ -21,11 +21,11 @@
 				<!-- <p class="text-secondary">{{ user.drivers_list_usernames }} drivers_list_usernames</p> -->
 			</div>
 		</div>
-		<div class="col-md-6">
+		<!-- <div class="col-md-6">
 			<h2 class="account-heading d-flex justify-content-center">Report Generation</h2>
 			<p class="text-secondary d-flex justify-content-center">To generate a Driver Point Tracking report, click the link below!</p>
 			<a class="d-flex justify-content-center" href="{% url 'generate-driver-points' %}">Generate Report</a>
-		</div>
+		</div> -->
 	</div>
 
 			<!-- This is updating sponsor info
@@ -49,6 +49,7 @@
 					<th scope="col">Number of Points</th>
 					<th scope="col">Edit Points</th>
 					<th scope="col">Edit Points Rate</th>
+					<th scope="col">Generate Report</th>
 
 				</tr>
 				{% for item in my_drivers reversed %}
@@ -68,10 +69,22 @@
 									<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Edit</button>
 								</form>
 							</td>
+							<td>
+								<form action="{% url 'generate-driver-points' %}" method="POST">
+									{% csrf_token %}
+									<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Generate</button>
+								</form>
+							</td>
 						</tr>
 					</tbody>
 				{% endfor %}
 			</table>
+			<h5 class="media-heading d-flex justify-content-center">Want to generate a report with all your drivers?</h5>
+			<form class="media-heading d-flex justify-content-center" action="{% url 'generate-driver-points' %}" method="POST">
+				{% csrf_token %}
+				<button type="submit" name="driver_username" value="all" class="btn btn-success">Generate Report For All</button>
+			</form>
+			<br>
 		{% else %}
 			<p class="text-secondary">No Drivers To Display</p>
 		{% endif %}

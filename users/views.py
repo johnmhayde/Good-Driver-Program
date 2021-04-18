@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, EditPointsForm, AcceptApplicationForm, GenerateDriverPointsReport, EditPointsRateForm
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, EditPointsForm, AcceptApplicationForm, EditPointsRateForm
 from .models import GenericUser, Driver, Sponsor, Application, PointHist, Sponsorship
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -196,36 +196,56 @@ def accept_application(request):
 
 def generate_driver_points_report(request):
 	if request.method == 'POST':
-		generate_driver_points_report_form = GenerateDriverPointsReport(request.POST)
-		if generate_driver_points_report_form.is_valid():
-			print(generate_driver_points_report_form.cleaned_data.get('driver'))
-			date_range = generate_driver_points_report_form.cleaned_data.get('date_range')
-			print(date_range)
-			sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
-			if generate_driver_points_report_form.cleaned_data.get('driver') == 'All':
-				# generate report for all drivers
-				drivers = PointHist.objects.filter(sponsor_company=sponsor_company)
-			else:
-				drivers = PointHist.objects.filter(sponsor_company=sponsor_company, username=generate_driver_points_report_form.cleaned_data.get('driver'))
-			# redirect to report page
-			driver_names = []
-			driver_points = []
-			for driver in drivers:
-				if driver_names.count(driver.username) == 0:
-					driver_names.append(driver.username)
-			for driver in driver_names:
-				points = Sponsorship.objects.get(sponsor_company=sponsor_company, driver=driver)
-				driver_points.append(points)
-			context = {
+		driver_username = request.POST.get("driver_username")
+		print("driver username: " + str(driver_username))
+		sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
+		if driver_username == "all":
+			drivers = drivers = PointHist.objects.filter(sponsor_company=sponsor_company)
+		else:
+			drivers = drivers = PointHist.objects.filter(sponsor_company=sponsor_company, username=driver_username)
+		driver_names = []
+		driver_points = []
+		for driver in drivers:
+			if driver_names.count(driver.username) == 0:
+				driver_names.append(driver.username)
+		for driver in driver_names:
+			points = Sponsorship.objects.get(sponsor_company=sponsor_company, driver=driver)
+			driver_points.append(points)
+		context = {
 				'drivers' : drivers,
 				'driver_points' : driver_points,
 			}
-			return render(request, 'portal/driver_points_report.html', context)
-	else:
-		generate_driver_points_report_form = GenerateDriverPointsReport()
+		return render(request, 'portal/driver_points_report.html', context)
+		# generate_driver_points_report_form = GenerateDriverPointsReport(request.POST)
+		# if generate_driver_points_report_form.is_valid():
+		# 	print(generate_driver_points_report_form.cleaned_data.get('driver'))
+		# 	date_range = generate_driver_points_report_form.cleaned_data.get('date_range')
+		# 	print(date_range)
+		# 	sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
+		# 	if generate_driver_points_report_form.cleaned_data.get('driver') == 'All':
+		# 		# generate report for all drivers
+		# 		drivers = PointHist.objects.filter(sponsor_company=sponsor_company)
+		# 	else:
+		# 		drivers = PointHist.objects.filter(sponsor_company=sponsor_company, username=generate_driver_points_report_form.cleaned_data.get('driver'))
+		# 	# redirect to report page
+		# 	driver_names = []
+		# 	driver_points = []
+		# 	for driver in drivers:
+		# 		if driver_names.count(driver.username) == 0:
+		# 			driver_names.append(driver.username)
+		# 	for driver in driver_names:
+		# 		points = Sponsorship.objects.get(sponsor_company=sponsor_company, driver=driver)
+		# 		driver_points.append(points)
+		# 	context = {
+		# 		'drivers' : drivers,
+		# 		'driver_points' : driver_points,
+		# 	}
+		# 	return render(request, 'portal/driver_points_report.html', context)
+	# else:
+	# 	generate_driver_points_report_form = GenerateDriverPointsReport()
 	sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
 	context = {
-		'generate_driver_points_report_form' : generate_driver_points_report_form,
+		# 'generate_driver_points_report_form' : generate_driver_points_report_form,
 		'sponsor_company' : sponsor_company,
 	}
 	return render(request, 'portal/generate_driver_points.html', context)
