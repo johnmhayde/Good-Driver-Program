@@ -12,6 +12,8 @@ class UserRegistrationForm(forms.ModelForm):
 	address = forms.CharField(label = 'Address')
 	password = forms.CharField(label = 'Password')
 	password2 = forms.CharField(label = 'Password Verification')
+	security_question = forms.CharField(label = 'Password Recovery Security Question')
+	security_answer = forms.CharField(label = 'Password Recovery Security Answer')
 
 	# overwrite the clean for username and password validation
 	def clean(self):
@@ -31,7 +33,7 @@ class UserRegistrationForm(forms.ModelForm):
 		# deliver the proper model to the database
 	class Meta:
 		model = Driver
-		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'password']
+		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'password', 'security_question', 'security_answer']
 
 # Driver Registration Form
 class SponsorRegistrationForm(forms.ModelForm):
@@ -42,8 +44,8 @@ class SponsorRegistrationForm(forms.ModelForm):
 		sponsor_company = forms.CharField(label = 'Company Name')
 		password = forms.CharField(label = 'Password')
 		password2 = forms.CharField(label = 'Password Verification')
-		security_question = forms.CharField(label = 'Account Recovery Security Question')
-		security_answer = forms.CharField(label = 'Account Recovery Security Answer')
+		security_question = forms.CharField(label = 'Password Recovery Security Question')
+		security_answer = forms.CharField(label = 'Password Recovery Security Answer')
 
 		# overwrite the clean for username and password validation
 		def clean(self):
@@ -98,7 +100,7 @@ class DriverUpdateFrom(forms.ModelForm):
 	# deliver only editable content to the page
 	class Meta:
 		model = Driver
-		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo']
+		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo', 'security_question', 'security_answer']
 
 # form for Sponsor Editing profile
 class SponsorUpdateForm(forms.ModelForm):
@@ -110,3 +112,10 @@ class SponsorUpdateForm(forms.ModelForm):
 
 class ApplicationForm(forms.Form):
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor.username,sponsor.sponsor_company]) for sponsor in Sponsor.objects.all()])
+
+class PasswordResetForm(forms.Form):
+    username = forms.CharField(label = 'Username')
+
+class PasswordChangeForm(forms.Form):
+    #question = forms.CharField(label = 'Security Question')
+    answer = forms.CharField(label = 'Security Answer')

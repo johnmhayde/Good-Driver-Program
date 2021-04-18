@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, PasswordResetForm, PasswordChangeForm
 from .models import GenericUser, Driver, Sponsor, Application
 from django.contrib.auth.models import User
+#from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import login
 from portal.models import UserEditInfo
 
@@ -105,3 +106,54 @@ def application(request):
 		'application_form' : application_form,
 	}
 	return render(request, 'users/application.html', context)
+
+def password_reset_request(request):
+        if request.method == "POST":
+                password_reset_form = PasswordResetForm(request.POST)
+                if password_reset_form.is_valid():
+                        user = GenericUser.objects.get(username=password_reset_form.cleaned_data.get('username'))
+                        userType = user.type
+                        username = user.username
+                        if(userType == 'Sponsor'):
+                                user = Sponsor.objects.get(username=password_reset_form.cleaned_data.get('username'))
+                        if(userType == 'Driver'):
+                                user = Driver.objects.get(username=password_reset_form.cleaned_data.get('username'))
+                        password_change_form = PasswordChangeForm()
+                        context = {
+                                'type' : userType,
+                                'security_question' : user.security_question,
+                                'security_answer' : user.security_answer,
+                                'password_change_form' : password_change_form,
+                        }
+                        #password_change_request(request, context)
+                        print('1')
+                        return redirect('password_reset_done', userType, username)
+                    #return render(request, 'users/password_reset_done.html', context)
+                        print('2')
+                        #question = password_reset_form.cleaned_data.get('question')
+                        #answer = password_reset_form.cleaned_data.get('answer')
+        password_reset_form = PasswordResetForm()
+        return render(request=request, template_name="users/password_reset.html", context={"password_reset_form":password_reset_form})
+
+def password_change_request(request, userType, username):
+        print('entered')
+        if request.method == "POST":
+                password_change_form = PasswordChangeForm(request.POST)
+                print(password_change_form)
+                if password_change_form.is_valid():
+                        print('k')
+                        if(answer == context.security_answer): 
+                                return redirect(password_reset_confirm, uid, token)
+        if(userType == 'Sponsor'):
+                user = Sponsor.objects.get(username=password_reset_form.cleaned_data.get('username'))
+        if(userType == 'Driver'):
+                user = Driver.objects.get(username=password_reset_form.cleaned_data.get('username'))
+                                #return render(request, 'users/password_reset_confirm.html', context2)
+        print('qhata')
+        password_change_form = PasswordChangeForm()
+        print('o')
+        context2 = {
+                'security_q' : user.security_question,
+                'password_change_form' : password_change_form,
+        }
+        return render(request, 'users/password_reset_done.html', context2)

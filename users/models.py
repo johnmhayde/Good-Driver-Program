@@ -7,6 +7,8 @@ from django_resized import ResizedImageField
 class GenericUser(models.Model):
 	username = models.CharField(max_length=30)
 	password = models.CharField(max_length=30)
+	security_question = models.CharField(max_length=60, default = "")
+	security_answer = models.CharField(max_length=60, default = "")
 	type = models.CharField(max_length=15)
 
 # Model for Driver Table - this is missing some fields, will have to decide how to fill out later
@@ -18,6 +20,8 @@ class Driver(models.Model):
 	phone_num = models.CharField(max_length=15)
 	email = models.CharField(max_length=30)
 	address = models.CharField(max_length=50)
+	security_question = models.CharField(max_length=60, default = "")
+	security_answer = models.CharField(max_length=60, default = "")
 	points = models.IntegerField(default=0)
 	# ADDED
 	sponsor = models.CharField(max_length=50, default = "")

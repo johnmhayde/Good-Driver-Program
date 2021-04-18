@@ -14,8 +14,17 @@ urlpatterns = [
 	path('', include('portal.urls')),
     path('edit_info/', user_views.update_driver_info, name="update-info"),
     path('edit_sponsor_info/', user_views.update_sponsor_info, name="update-sponsor-info"),
-    path('application/', user_views.application, name="apply")
-    path('change-password/', auth_views.PasswordChangeView.as_view(template_name='change-password.html', success_url = '/'), name='change_password')
+    path('application/', user_views.application, name="apply"),
+    path('password_reset', user_views.password_reset_request, name='password_reset'),
+    #path('password_reset/', auth_views.PasswordResetView.as_view(template_name='users/password_reset.html'), name='password_reset'),
+    path('password_reset_done/<userType>/<username>', user_views.password_change_request, name='password_reset_done'),
+    #path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'), name='password_reset_complete')
+
+    #path('accounts/', include('django.contrib.auth.urls')),
+    #url(r'^password/change/$', auth_views.password_change, name='auth_password_change'),
+    #url(r'^password/change/done/$', auth_views.password_change_done, name='auth_password_change_done')
 ]
 
 # urlpatterns += staticfiles_urlpatterns()
