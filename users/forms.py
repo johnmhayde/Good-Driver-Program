@@ -127,7 +127,7 @@ class ApplicationForm(forms.Form):
 	for sponsor in Sponsor.objects.all():
 		if sponsor_list.count(sponsor.sponsor_company) == 0:
 			sponsor_list.append(sponsor.sponsor_company)
-	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
+	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=["sponsor", "sponsor"]) # [sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
 
 class AcceptApplicationForm(forms.ModelForm):
 	model = Application
