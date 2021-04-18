@@ -124,8 +124,7 @@ class EditPointsRateForm(forms.ModelForm):
 
 class ApplicationForm(forms.Form):
 	sponsor_list = []
-	for sponsor in Sponsor.objects.all():
-		print("sponsor name: " + str(sponsor.sponsor_company))
+	for sponsor in Sponsor.objects.filter():
 		if sponsor_list.count(sponsor.sponsor_company) == 0:
 			sponsor_list.append(sponsor.sponsor_company)
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
@@ -139,7 +138,7 @@ class AcceptApplicationForm(forms.ModelForm):
 class GenerateDriverPointsReport(forms.Form):
 	driver_list = []
 	driver_list.append('All')
-	for driver in Driver.objects.all():
+	for driver in Driver.objects.filter():
 		if driver_list.count(driver.username) == 0:
 			driver_list.append(driver.username)
 	driver = forms.ChoiceField(label="Select a driver from the list: ", choices=[tuple([driver, driver]) for driver in driver_list])
