@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 import requests
 from html import unescape
 import time
+from django.contrib import messages
 
 
 # from portal.models import UserLogin
@@ -159,6 +160,7 @@ def catalog_sponsor(request):
             print('Product ID received!')
             if Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum=prodID).exists():
                 newProduct = Product.objects.filter(sponsor_company=sponsor.sponsor_company, idNum=prodID).delete()
+                messages.success(request, f"Product removed from catalog!")
         listed_products = Product.objects.filter(sponsor_company=sponsor.sponsor_company)
         parse1 = []
         tally = 0
@@ -202,7 +204,6 @@ def sponsor_list(request):
     # Get the sponsor username
     gUser = GenericUser.objects.get(username=user.username)
     userType = gUser.type
-    print('user retrieved')
     if userType == 'Sponsor':
         sponsor = Sponsor.objects.get(username=user.username)
         search = sponsor.list_last_search
@@ -218,6 +219,7 @@ def sponsor_list(request):
                                                     priceRaw=float(requests.get(
                                                         'https://openapi.etsy.com/v2/listings/' + prodID + '?api_key=pmewf48x56vb387qgsprzzry').json()[
                                                                        'results'][0]['price']))
+                messages.success(request, f"Product added to catalog!")
         # This is a failsafe in case the database isn't cooperating with older users.
         if sponsor.list_last_search == '':
             sponsor.list_last_search = 'candle'
@@ -264,6 +266,8 @@ def select_driver(request):
         if driverUsername != '' and driverUsername != None:
             sponsor.driver_vicarious = driverUsername
             sponsor.save()
+            driver = Driver.objects.get(username=driverUsername)
+            messages.success(request, f"Driver selected! You can now see as "+driver.first_name+" "+driver.last_name)
         sponsorships = Sponsorship.objects.filter(sponsor_company=sponsor.sponsor_company)
         drivers = []
         for sponsorship in sponsorships:
@@ -470,6 +474,7 @@ def Cart(request,page_number):
 
         if orderID != '' and orderID != None:
             order = DriverOrder.objects.get(customer=driver,id=orderID).delete()
+            messages.success(request, f"Oreder removed!")
             
         orderID = ''
         orderID = request.POST.get('place-order-override')
