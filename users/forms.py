@@ -130,11 +130,9 @@ class EditPointsRateForm(forms.ModelForm):
 	# sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
 
 
-class AcceptApplicationForm(forms.ModelForm):
-	model = Application
-	class Meta:
-		model = Application
-		fields = ['status', 'reason']
+class AcceptApplicationForm(forms.Form):
+	status = forms.ChoiceField(label = "Action to take on application:", choices = [tuple(["Accepted", "Accept"]), tuple(["Rejected", "Reject"])])
+	reason = forms.CharField(label = "Reason:")
 
 # class GenerateDriverPointsReport(forms.Form):
 # 	driver_list = []
