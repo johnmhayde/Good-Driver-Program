@@ -125,6 +125,7 @@ class EditPointsRateForm(forms.ModelForm):
 class ApplicationForm(forms.Form):
 	sponsor_list = []
 	for sponsor in Sponsor.objects.all():
+		print("sponsor name: " + str(sponsor.sponsor_company))
 		if sponsor_list.count(sponsor.sponsor_company) == 0:
 			sponsor_list.append(sponsor.sponsor_company)
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
