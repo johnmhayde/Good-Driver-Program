@@ -7,6 +7,7 @@ from django.contrib.auth import login
 from portal.models import UserEditInfo
 from datetime import date, timedelta
 import datetime
+from portal.views import driverGet
 
 # register new user with form input if form is valid
 def register(request):
@@ -154,18 +155,34 @@ def update_sponsor_info(request):
 	return render(request, 'users/edit_sponsor_info.html', context)
 
 def application(request):
-	if request.method == 'POST':
-		application_form = ApplicationForm(request.POST)
-		if application_form.is_valid():
-			sponsor_company = application_form.cleaned_data.get('sponsor')
-			application = Application.objects.create(driver=request.user.username, sponsor_company=sponsor_company, status="Pending")
-			application.save()
-			messages.success(request, f"Your application has been submitted!")
-			return redirect('driver-home')
-	else:
-		application_form = ApplicationForm()
+	driver=driverGet(request.user)
+	#if request.method == 'POST':
+	#	application_form = ApplicationForm(request.POST)
+	#	if application_form.is_valid():
+	#		sponsor_company = application_form.cleaned_data.get('sponsor')
+	#		application = Application.objects.create(driver=request.user.username, sponsor_company=sponsor_company, status="Pending")
+	#		application.save()
+	#		messages.success(request, f"Your application has been submitted!")
+	#		return redirect('driver-home')
+	#else:
+	#	application_form = ApplicationForm()
+	#context = {
+	#	'application_form' : application_form,
+	#}
+	application = ''
+	application = request.POST.get('application')
+
+	if application != '' and application != None:
+		if Application.objects.filter(driver=driver.username,sponsor_company=application).exists() == False:
+			Application.objects.create(driver=driver.username,sponsor_company=application)
+
+	companies=[]
+	for sponsor in Sponsor.objects.all():
+		if companies.count(sponsor.sponsor_company)<1:
+			companies.append(sponsor.sponsor_company)
+
 	context = {
-		'application_form' : application_form,
+		'companies': companies
 	}
 	return render(request, 'users/application.html', context)
 
