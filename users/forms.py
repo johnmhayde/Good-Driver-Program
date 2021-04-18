@@ -123,10 +123,10 @@ class EditPointsRateForm(forms.ModelForm):
 		fields = ['price_scalar']
 
 class ApplicationForm(forms.Form):
-	sponsor_list = []
-	for sponsor in Sponsor.objects.all():
-		if sponsor_list.count(sponsor.sponsor_company) == 0:
-			sponsor_list.append(sponsor.sponsor_company)
+	# sponsor_list = []
+	# for sponsor in Sponsor.objects.all():
+	# 	if sponsor_list.count(sponsor.sponsor_company) == 0:
+	# 		sponsor_list.append(sponsor.sponsor_company)
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=["sponsor", "sponsor"]) # [sponsor_company, sponsor_company]) for sponsor_company in sponsor_list])
 
 class AcceptApplicationForm(forms.ModelForm):
