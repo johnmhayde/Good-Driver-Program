@@ -1,4 +1,29 @@
 {% extends "portal/base.html" %}
 {% block content %}
-	<h1>Home Page!</h1>
+	<h1>Welcome to the Good Driver Program!</h1>
+	<div class="row">
+		<table class="table">
+			<tr>
+				<th scope="col">Registering as a Driver? Start here!</th>
+				<th scope="col">Registering as a Sponsor? Start here instead!</th>
+				<th scope="col">Already have an account?</th>
+			</tr>
+			<tbody>
+				<tr>
+					<td><form action="{% url 'driver_register' %}" method="POST">
+						{% csrf_token %}
+						<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Register as Driver</button>
+					</form></td>
+					<td><form action="{% url 'sponsor_register' %}" method="POST">
+						{% csrf_token %}
+						<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Register as Sponsor</button>
+					</form></td>
+					<td><form action="{% url 'login' %}" method="POST">
+						{% csrf_token %}
+						<button type="submit" name="driver_username" value="{{ item.driver }}" class="btn btn-success">Log In To An Account</button>
+					</form></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 {% endblock content%}
