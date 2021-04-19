@@ -119,3 +119,7 @@ class PasswordResetForm(forms.Form):
 class PasswordChangeForm(forms.Form):
     #question = forms.CharField(label = 'Security Question')
     answer = forms.CharField(label = 'Security Answer')
+
+class PasswordUpdateForm(forms.Form):
+    password = forms.CharField(label = 'New Password')
+    password2 = forms.CharField(label = 'Confirm Password')

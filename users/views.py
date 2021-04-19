@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, PasswordResetForm, PasswordChangeForm
+from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, PasswordResetForm, PasswordChangeForm, PasswordUpdateForm
 from .models import GenericUser, Driver, Sponsor, Application
 from django.contrib.auth.models import User
 #from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import login
 from portal.models import UserEditInfo
+from django.contrib.auth.hashers import make_password
 
 # register new user with form input if form is valid
 def register(request):
@@ -111,7 +112,11 @@ def password_reset_request(request):
         if request.method == "POST":
                 password_reset_form = PasswordResetForm(request.POST)
                 if password_reset_form.is_valid():
-                        user = GenericUser.objects.get(username=password_reset_form.cleaned_data.get('username'))
+                        try:
+                                user = GenericUser.objects.get(username=password_reset_form.cleaned_data.get('username'))
+                        except:
+                                messages.error(request, f"Please input a valid username")
+                                return redirect('password_reset')
                         userType = user.type
                         username = user.username
                         if(userType == 'Sponsor'):
@@ -125,35 +130,48 @@ def password_reset_request(request):
                                 'security_answer' : user.security_answer,
                                 'password_change_form' : password_change_form,
                         }
-                        #password_change_request(request, context)
-                        print('1')
                         return redirect('password_reset_done', userType, username)
-                    #return render(request, 'users/password_reset_done.html', context)
-                        print('2')
-                        #question = password_reset_form.cleaned_data.get('question')
-                        #answer = password_reset_form.cleaned_data.get('answer')
         password_reset_form = PasswordResetForm()
         return render(request=request, template_name="users/password_reset.html", context={"password_reset_form":password_reset_form})
 
 def password_change_request(request, userType, username):
-        print('entered')
+        if(userType == 'Sponsor'):
+                user = Sponsor.objects.get(username=username)
+        if(userType == 'Driver'):
+                user = Driver.objects.get(username=username)
         if request.method == "POST":
                 password_change_form = PasswordChangeForm(request.POST)
-                print(password_change_form)
                 if password_change_form.is_valid():
-                        print('k')
-                        if(answer == context.security_answer): 
-                                return redirect(password_reset_confirm, uid, token)
-        if(userType == 'Sponsor'):
-                user = Sponsor.objects.get(username=password_reset_form.cleaned_data.get('username'))
-        if(userType == 'Driver'):
-                user = Driver.objects.get(username=password_reset_form.cleaned_data.get('username'))
-                                #return render(request, 'users/password_reset_confirm.html', context2)
-        print('qhata')
+                        answer = password_change_form.cleaned_data.get('answer')
+                        if(answer == user.security_answer): 
+                                #uid = urlsafe_base64_encode(force_bytes(user.pk))
+                                #token = default_token_generator.make_token(user)
+                                return redirect('password_reset_confirm', user.username)
+                                #return render(request, 'users/password_reset_confirm.html', contex
+                        else:
+                                messages.error(request, f"Incorrect Security Answer")
+                                return redirect('password_reset_done', userType, username)
         password_change_form = PasswordChangeForm()
-        print('o')
         context2 = {
-                'security_q' : user.security_question,
+                'security_question' : user.security_question,
                 'password_change_form' : password_change_form,
         }
         return render(request, 'users/password_reset_done.html', context2)
+
+def password_update_request(request, username):
+    if request.method == "POST":
+            user = User.objects.get(username=username)
+            password_update_form = PasswordUpdateForm(request.POST)
+            if password_update_form.is_valid():
+                    answer = password_update_form.cleaned_data.get('password')
+                    answer2 = password_update_form.cleaned_data.get('password2')
+                    if (answer == answer2):
+                            user.password = answer
+                            user.password = make_password(answer)
+                            user.save()
+                            return render(request, 'users/password_reset_complete.html')
+                    else:
+                            messages.error(request, f"New passwords do not match. Please type in matching passwords")
+                            return redirect('password_reset_confirm', username)
+    password_update_form = PasswordUpdateForm()
+    return render(request, 'users/password_reset_confirm.html', context={"password_update_form":password_update_form})
