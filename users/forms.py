@@ -102,7 +102,7 @@ class DriverUpdateFrom(forms.ModelForm):
 	# deliver only editable content to the page
 	class Meta:
 		model = Driver
-		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo', 'security_question', 'security_answer']
+		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo']#, 'security_question', 'security_answer']
 
 # form for Sponsor Editing profile
 class SponsorUpdateForm(forms.ModelForm):
@@ -110,7 +110,7 @@ class SponsorUpdateForm(forms.ModelForm):
 	# deliver only editable content to the page
 	class Meta:
 		model = Sponsor
-		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
+		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password']#, 'security_question', 'security_answer']
 
 # handles sponsor editing driver points
 class EditPointsForm(forms.ModelForm):

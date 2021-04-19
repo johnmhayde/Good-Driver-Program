@@ -22,7 +22,7 @@ class Driver(models.Model):
 	email = models.CharField(max_length=30)
 	address = models.CharField(max_length=50)
 	security_question = models.CharField(max_length=60, default = "")
-	security_answer = models.CharField(max_length=60, default = "")
+	# security_answer = models.CharField(max_length=60, default = "")
 	points = models.IntegerField(default=0)
 	point_change_temp = models.IntegerField(default=0)
 	# ADDED
@@ -49,7 +49,7 @@ class Sponsor(models.Model):
     address = models.CharField(max_length=50, default="")
     sponsor_company = models.CharField(max_length=30, default="")
     security_question = models.CharField(max_length=60, default="")
-    security_answer = models.CharField(max_length=60, default="")
+    # security_answer = models.CharField(max_length=60, default="")
     list_last_search = models.CharField(max_length=50, default="candle")
     list_items_per_page = models.IntegerField(default=25)
     list_sort_order = models.CharField(max_length=4, default="up")  # up, down
