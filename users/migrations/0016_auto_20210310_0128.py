@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         #     model_name='sponsor',
         #     name='security_answer',
         #     field=models.CharField(default='', max_length=60),
-        # ),
+        # ), help
         migrations.AddField(
             model_name='sponsor',
             name='security_question',
