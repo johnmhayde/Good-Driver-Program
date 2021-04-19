@@ -10,11 +10,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='sponsor',
-            name='security_answer',
-            field=models.CharField(default='', max_length=60),
-        ),
+        # migrations.AddField(
+        #     model_name='sponsor',
+        #     name='security_answer',
+        #     field=models.CharField(default='', max_length=60),
+        # ),
         migrations.AddField(
             model_name='sponsor',
             name='security_question',
