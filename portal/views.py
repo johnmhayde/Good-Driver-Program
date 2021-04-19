@@ -328,6 +328,7 @@ def productListView(request, products_per_page, page_number, sponsor_company):
                 tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
                                                       price=int(tempProduct.priceRaw/Sponsorship.objects.get(driver=driver.username,sponsor_company=sponsor_company).price_scalar),sponsor_company=sponsor_company)
+                messages.success(request, f"Product added to cart")
         listed_products = Product.objects.filter(sponsor_company=sponsor_company)
 
         parse1 = []
