@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-<<<<<<< HEAD
 from .forms import UserRegistrationForm, SponsorRegistrationForm, DriverUpdateFrom, SponsorUpdateForm, ApplicationForm, PasswordResetForm, PasswordChangeForm, PasswordUpdateForm, EditPointsForm, AcceptApplicationForm, GenerateDriverPointsReport, EditPointsRateForm
 from .models import GenericUser, Driver, Sponsor, Application, PointHist, Sponsorship
->>>>>>> bea62c62af356060444354fa503ae7058dbf7681
 from django.contrib.auth.models import User
 #from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import login
