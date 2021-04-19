@@ -369,6 +369,9 @@ def productListView(request, products_per_page, page_number, sponsor_company):
             else:
                 x['price'] += " points"
 
+            x['image'] = requests.get('https://openapi.etsy.com/v2/listings/' + str(
+                x['listing_id']) + '/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_170x135']
+
         data = {
             'sponsor_company': sponsor_company,
             'items': parse3,
