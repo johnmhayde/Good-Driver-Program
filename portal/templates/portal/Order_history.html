@@ -19,17 +19,21 @@
 		</tr>
 	{% for item in cartItems reversed %}
 	<tbody>
-			<tr>
-				<td>{{ item.productName }}</td>
-				<td>{{ item.product.sponsor_company }}</td>
-				<td>{{ item.price }}</td>
-				<td>{{ item.date }}</td>
-				<td>{{ item.orderStatus }}</td>
-				<td><form action="{% url 'Order-History'  current_page_number %}" method="post">
+		<tr>
+			<td>{{ item.productName }}</td>
+			<td>{{ item.product.sponsor_company }}</td>
+			<td>{{ item.price }}</td>
+			<td>{{ item.date }}</td>
+			<td>{{ item.orderStatus }}</td>
+			{% if item.orderStatus != 'Cancelled' %}
+			<td>
+				<form action="{% url 'Order-History'  current_page_number %}" method="post">
 					{% csrf_token %}
 					<button id="cancel-order" type="submit" name="cancel-order" value="{{ item.id }}" class="btn btn-success">Cancel Order</button>
-				</form></td>
-			</tr>
+				</form>
+			</td>
+			{% endif %}
+		</tr>
 
 	{% endfor %}
 		</tbody>

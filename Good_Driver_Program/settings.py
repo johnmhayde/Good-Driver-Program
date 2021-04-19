@@ -86,15 +86,21 @@ WSGI_APPLICATION = 'Good_Driver_Program.wsgi.application'
 
 # AWS RDS MySQL Database, use for production
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '4910_proj',
-        'USER': 'jhayde',
-        'PASSWORD': 'johnmichael06',
-        'HOST': 'aa18e8zzngpqr5r.crcluxn1qu4c.us-east-1.rds.amazonaws.com',
-        'PORT': '3306',
-    }
-}
+ 	'default': {
+ 	    'ENGINE': 'django.db.backends.sqlite3',
+ 	    'NAME': BASE_DIR / 'db.sqlite3',
+ 	}
+ }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': '4910_proj',
+#        'USER': 'jhayde',
+#        'PASSWORD': 'johnmichael06',
+#        'HOST': 'aa18e8zzngpqr5r.crcluxn1qu4c.us-east-1.rds.amazonaws.com',
+#        'PORT': '3306',
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

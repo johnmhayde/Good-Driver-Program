@@ -328,6 +328,7 @@ def productListView(request, products_per_page, page_number, sponsor_company):
                 tempProduct = Product.objects.get(sponsor_company=sponsor_company, idNum=prodID)
                 newOrder = DriverOrder.objects.create(product=tempProduct, customer=driver, quantity=1,
                                                       price=int(tempProduct.priceRaw/Sponsorship.objects.get(driver=driver.username,sponsor_company=sponsor_company).price_scalar),sponsor_company=sponsor_company)
+                messages.success(request, f"Product added to cart")
         listed_products = Product.objects.filter(sponsor_company=sponsor_company)
 
         parse1 = []
@@ -442,7 +443,7 @@ def productDetailView(request, product_ID, sponsor_company):
         parse3 = parse1
         for x in parse3:
             x['image'] = requests.get('https://openapi.etsy.com/v2/listings/' + str(
-                x['listing_id']) + '/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_170x135']
+                x['listing_id']) + '/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_fullxfull']
 
         data = {
             'items': parse3,
