@@ -12,6 +12,8 @@ class UserRegistrationForm(forms.ModelForm):
 	address = forms.CharField(label = 'Address')
 	password = forms.CharField(label = 'Password')
 	password2 = forms.CharField(label = 'Password Verification')
+	security_question = forms.CharField(label = 'Password Recovery Security Question')
+	security_answer = forms.CharField(label = 'Password Recovery Security Answer')
 
 	# overwrite the clean for username and password validation
 	def clean(self):
@@ -31,7 +33,7 @@ class UserRegistrationForm(forms.ModelForm):
 		# deliver the proper model to the database
 	class Meta:
 		model = Driver
-		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'password']
+		fields = ['username', 'first_name', 'last_name', 'phone_num', 'email', 'address', 'password', 'security_question', 'security_answer']
 
 # Driver Registration Form
 class SponsorRegistrationForm(forms.ModelForm):
@@ -42,8 +44,8 @@ class SponsorRegistrationForm(forms.ModelForm):
 		sponsor_company = forms.CharField(label = 'Company Name')
 		password = forms.CharField(label = 'Password')
 		password2 = forms.CharField(label = 'Password Verification')
-		security_question = forms.CharField(label = 'Account Recovery Security Question')
-		security_answer = forms.CharField(label = 'Account Recovery Security Answer')
+		security_question = forms.CharField(label = 'Password Recovery Security Question')
+		security_answer = forms.CharField(label = 'Password Recovery Security Answer')
 
 		# overwrite the clean for username and password validation
 		def clean(self):
@@ -65,7 +67,7 @@ class SponsorRegistrationForm(forms.ModelForm):
 			model = Sponsor
 			fields = ['username', 'first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
 
-# handles Admin registrtion 
+# handles Admin registrtion
 class AdminRegistrationForm(forms.ModelForm):
 	username = forms.CharField(label = 'Username')
 	first_name = forms.CharField(label = 'First Name')
@@ -100,7 +102,7 @@ class DriverUpdateFrom(forms.ModelForm):
 	# deliver only editable content to the page
 	class Meta:
 		model = Driver
-		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo']
+		fields = ['first_name', 'last_name', 'phone_num', 'email', 'address', 'profile_photo', 'security_question', 'security_answer']
 
 # form for Sponsor Editing profile
 class SponsorUpdateForm(forms.ModelForm):
@@ -130,3 +132,14 @@ class EditPointsRateForm(forms.ModelForm):
 class AcceptApplicationForm(forms.Form):
 	status = forms.ChoiceField(label = "Action to take on application:", choices = [tuple(["Accepted", "Accept"]), tuple(["Rejected", "Reject"])])
 	reason = forms.CharField(label = "Reason:")
+
+class PasswordResetForm(forms.Form):
+    username = forms.CharField(label = 'Username')
+
+class PasswordChangeForm(forms.Form):
+    #question = forms.CharField(label = 'Security Question')
+    answer = forms.CharField(label = 'Security Answer')
+
+class PasswordUpdateForm(forms.Form):
+    password = forms.CharField(label = 'New Password')
+    password2 = forms.CharField(label = 'Confirm Password')

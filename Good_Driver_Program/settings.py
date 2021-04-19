@@ -83,14 +83,8 @@ WSGI_APPLICATION = 'Good_Driver_Program.wsgi.application'
 # 	    'NAME': BASE_DIR / 'db.sqlite3',
 # 	}
 # }
-
+#
 # AWS RDS MySQL Database, use for production
-# DATABASES = {
-#  	'default': {
-#  	    'ENGINE': 'django.db.backends.sqlite3',
-#  	    'NAME': BASE_DIR / 'db.sqlite3',
-#  	}
-#  }
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.mysql',
