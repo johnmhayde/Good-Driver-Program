@@ -442,7 +442,7 @@ def productDetailView(request, product_ID, sponsor_company):
         parse3 = parse1
         for x in parse3:
             x['image'] = requests.get('https://openapi.etsy.com/v2/listings/' + str(
-                x['listing_id']) + '/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_170x135']
+                x['listing_id']) + '/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_fullxfull']
 
         data = {
             'items': parse3,
