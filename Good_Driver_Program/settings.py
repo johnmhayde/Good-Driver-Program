@@ -25,8 +25,8 @@ SECRET_KEY = 'c2z)o(scoexds@eh2me!sx7#o-j@y25x3olpi=f2mfb_ayql=y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['localhost','Good-Driver-Program-dev.us-east-1.elasticbeanstalk.com', '172.31.24.174', '127.0.0.1', 'localhost:8000']
+# '172.31.24.174',
+ALLOWED_HOSTS = ['localhost','Good-Driver-Program-dev.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost:8000']
 
 # Application definition
 
