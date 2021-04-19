@@ -6,8 +6,10 @@
     "\\portal",
     "\\portal\\templates",
     "\\portal\\templates\\portal",
-    "\\users"
+    "\\users",
+    "\\users\\templates",
+    "\\users\\templates\\users"
   ],
-  "SelectedNode": "\\portal\\views.py",
+  "SelectedNode": "\\portal\\templates\\portal\\base_sponsor.html",
   "PreviewInSolutionExplorer": false
 }
