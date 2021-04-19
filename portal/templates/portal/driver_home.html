@@ -12,12 +12,16 @@
 				<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
 			{% else %}
 				<h2 class="account-heading">Viewing as {{ first_name }} {{ last_name }}</h2>
+				<form action="{% url 'driver-home' %}" method="POST">
+					{% csrf_token %}
+					<button type="submit" name="driver_username" value="{{ driver.username }}" class="btn btn-success">Stop Viewing as Driver</button>
+				</form>
 			{% endif %}
 			<div class="content-section">
 				<div class="media-body">
 					<img class="rounded-circle account-img" width="70%" height="auto" src="{{ profile_photo }}">
-					<p class="text-secondary">{{ user.username }}</p>
-					<p class="text-secondary">{{ user.email }}</p>
+					<p class="text-secondary">{{ driver.username }}</p>
+					<p class="text-secondary">{{ driver.email }}</p>
 					<p class="text-secondary">{{ phone_num }}</p>
 					<p class="text-secondary">{{ address }}</p>
 					<a href="{% url 'update-info' %}">Edit Profile Information</a>

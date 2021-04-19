@@ -67,6 +67,13 @@ def driver_home(request):
         print('Driver name is: \''+Sponsor.objects.get(username=user.username).driver_vicarious+'\'')
     if userType == 'Sponsor' and not Driver.objects.filter(username=Sponsor.objects.get(username=user.username).driver_vicarious).exists():
         return redirect('select-driver')
+    stopUsername = ''
+    stopUsername = request.POST.get('driver_username')
+    if stopUsername != '' and stopUsername != None and userType == 'Sponsor':
+        sponsorToClear = Sponsor.objects.get(username = request.user.username)
+        sponsorToClear.driver_vicarious=''
+        sponsorToClear.save()
+        return redirect('sponsor-home')
     driver = driverGet(user)
     # send point history to page
     try:
@@ -93,6 +100,7 @@ def driver_home(request):
     except Sponsorship.DoesNotExist:
         sponsor_list = None
     data = {
+        'driver':driver,
         'points': driver.points,
         'point_hist': point_hist,
         'first_name': driver.first_name,
@@ -360,6 +368,9 @@ def productListView(request, products_per_page, page_number, sponsor_company):
                 x['price'] += " point"
             else:
                 x['price'] += " points"
+
+            x['image'] = requests.get('https://openapi.etsy.com/v2/listings/' + str(
+                x['listing_id']) + '/images?api_key=pmewf48x56vb387qgsprzzry').json()['results'][0]['url_170x135']
 
         data = {
             'sponsor_company': sponsor_company,
