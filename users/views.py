@@ -137,11 +137,7 @@ def update_driver_points_rate(request):
 	if request.method == 'POST':
 		driver_points_form = EditPointsRateForm(request.POST, instance=driver)
 		if driver_points_form.is_valid():
-<<<<<<< HEAD
-			## update drive points in sponsorships
-=======
 			## update driver points rate in sponsorships
->>>>>>> 58a00590d45aaeb8147f8557a1eb5fe0063e4fd8
 			sponsorship = Sponsorship.objects.get(driver = request.POST.get("driver_username"), sponsor_company=Sponsor.objects.get(username=request.user.username).sponsor_company)
 			#sponsorship.driver_points += points
 			sponsorship.price_scalar = driver_points_form.cleaned_data.get('price_scalar')
@@ -175,12 +171,7 @@ def update_sponsor_info(request):
 	return render(request, 'users/edit_sponsor_info.html', context)
 
 def application(request):
-<<<<<<< HEAD
 	driver = driverGet(request.user)
-=======
-	driver=driverGet(request.user)
-
->>>>>>> 58a00590d45aaeb8147f8557a1eb5fe0063e4fd8
 	application = ''
 	application = request.POST.get('application')
 
