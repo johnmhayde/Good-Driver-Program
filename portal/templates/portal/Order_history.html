@@ -1,0 +1,58 @@
+{% extends "portal/base_driver.html" %}
+{% block content %}
+<div class="row">
+		<div class="col-md-12">
+			<h1>Order History</h1>
+			{% if not realDriver %}
+				<p class="text-secondary">For {{driver.first_name}} {{driver.last_name}}, from your company</p>
+			{% endif %}
+		</div>
+</div>
+{%if cartItems%}
+<table class="table">
+		<tr>
+			<th scope="col">Product</th>
+			<th scope="col">Sponsor</th>
+			<th scope="col">Price</th>
+			<th scope="col">Date Placed</th>
+			<th scope="col">Order Status</th>
+		</tr>
+	{% for item in cartItems reversed %}
+	<tbody>
+		<tr>
+			<td>{{ item.productName }}</td>
+			<td>{{ item.product.sponsor_company }}</td>
+			<td>{{ item.price }}</td>
+			<td>{{ item.date }}</td>
+			<td>{{ item.orderStatus }}</td>
+			{% if item.orderStatus != 'Cancelled' %}
+			<td>
+				<form action="{% url 'Order-History'  current_page_number %}" method="post">
+					{% csrf_token %}
+					<button id="cancel-order" type="submit" name="cancel-order" value="{{ item.id }}" class="btn btn-success">Cancel Order</button>
+				</form>
+			</td>
+			{% endif %}
+		</tr>
+
+	{% endfor %}
+		</tbody>
+    </table>
+{% if paginated %}
+	<div class="row">
+		{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' previous_page_number %}">Previous</a>
+		{%endif%}
+		{% if next %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' next_page_number %}">Next</a>
+		{%endif%}
+	</div>
+{%endif%}
+{% else %}
+	{% if previous %}
+			<a class="btn btn-outline-info mb-4" href="{% url 'Order-History' previous_page_number %}">Previous</a>
+	{% else %}
+		<p class="text-secondary">No Orders placed</p>
+	{%endif%}
+{% endif %}
+{% endblock content%}

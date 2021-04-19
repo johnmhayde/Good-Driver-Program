@@ -2,15 +2,39 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="content-section">
-  <form enctype="multipart/form-data" method="POST">
+    <!--<form enctype="multipart/form-data" method="POST">
     {% csrf_token %}
     <fieldset class="form-group">
-      <legend class="border-bottom mb-4">Apply For Sponsorship</legend>
-      {{ application_form|crispy }}
+    <legend class="border-bottom mb-4">Apply For Sponsorship</legend>
+    {{ application_form|crispy }}
     </fieldset>
     <div class="form-group">
-      <button class="btn btn-outline-info" type="submit" name="button">Apply</button>
+    <button class="btn btn-outline-info" type="submit" name="button">Apply</button>
     </div>
-  </form>
+</form>-->
+    <h2 class="media-heading d-flex justify-content-center">You can apply to:</h2>
+    {% if companies %}
+    <table class="table">
+        <tr>
+            <th scope="col">Sponsor Companies</th>
+            <th scope="col"></th>
+        </tr>
+        {% for company in companies %}
+        <tbody>
+            <tr>
+                <td>{{ company }}</td>
+                <td>
+                    <form action="{% url 'apply' %}" method="post">
+                        {% csrf_token %}
+                        <button id="application" type="submit" name="application" value="{{ company }}" class="btn btn-success">Apply!</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="text-secondary">No Companies To Apply To</p>
+    {% endif %}
 </div>
 {% endblock content %}

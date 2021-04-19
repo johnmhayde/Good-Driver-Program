@@ -1,0 +1,17 @@
+<!-- Load styling -->
+{% extends "portal/base_sponsor.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<div class="content-section">
+		<form enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4">Generate Report</legend>
+				{{ generate_driver_points_report_form|crispy }}
+			</fieldset>
+			<div class="form-group">
+				<button class="btn btn-outline-info" type="submit" name="button">Generate</button>
+			</div>
+		</form>
+	</div>
+{% endblock content%}

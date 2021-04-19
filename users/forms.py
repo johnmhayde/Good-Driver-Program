@@ -1,5 +1,5 @@
 from django import forms
-from .models import Driver, Sponsor, GenericAdmin, Application
+from .models import Driver, Sponsor, GenericAdmin, Application, PointHist, Sponsorship
 from PIL import Image
 
 # create a custom form for the Driver Model
@@ -110,7 +110,25 @@ class SponsorUpdateForm(forms.ModelForm):
 		model = Sponsor
 		fields = ['first_name', 'last_name', 'email', 'sponsor_company', 'password', 'security_question', 'security_answer']
 
+class EditPointsForm(forms.ModelForm):
+	model = PointHist
+	# deliver only editable content to the page
+	class Meta:
+		model = PointHist
+		fields = ['points', 'reason']
+
+class EditPointsRateForm(forms.ModelForm):
+	model = Sponsorship
+	# deliver only editable content to the page
+	class Meta:
+		model = Sponsorship
+		fields = ['price_scalar']
+
 class ApplicationForm(forms.Form):
+	sponsor_list = []
+	for sponsor in Sponsor.objects.all():
+		if sponsor_list.count(sponsor.sponsor_company) == 0:
+			sponsor_list.append(sponsor.sponsor_company)
 	sponsor = forms.ChoiceField(label="Select a sponsor from the list:", choices=[tuple([sponsor.username,sponsor.sponsor_company]) for sponsor in Sponsor.objects.all()])
 
 class PasswordResetForm(forms.Form):
@@ -123,3 +141,18 @@ class PasswordChangeForm(forms.Form):
 class PasswordUpdateForm(forms.Form):
     password = forms.CharField(label = 'New Password')
     password2 = forms.CharField(label = 'Confirm Password')
+
+class AcceptApplicationForm(forms.ModelForm):
+	model = Application
+	class Meta:
+		model = Application
+		fields = ['status', 'reason']
+
+class GenerateDriverPointsReport(forms.Form):
+	driver_list = []
+	driver_list.append('All')
+	for driver in Driver.objects.all():
+		if driver_list.count(driver.username) == 0:
+			driver_list.append(driver.username)
+	driver = forms.ChoiceField(label="Select a driver from the list: ", choices=[tuple([driver, driver]) for driver in driver_list])
+	date_range = forms.ChoiceField(label="Select a date range: ", choices=[tuple(['day', 'Past Day']), tuple(['week', 'Past Week']), tuple(['month', 'Past Month']), tuple(['all', 'All'])])

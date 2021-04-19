@@ -1,0 +1,55 @@
+{% extends "portal/base_driver.html" %}
+{% block content %}
+
+<div class="row">
+		<div class="col-md-12">
+			<h1>Product Page - {{ sponsor_company }}!</h1>
+			{% if not realDriver %}
+				<p class="text-secondary">(That's your company!)</p>
+			{% endif %}
+			<!--<form action = "{url 'searchbar'}" method = "get">
+                <input type = "text" name = "search"/>
+                <button type = "submit">Search</button>
+            </form>-->
+		</div>
+	</div>
+<div class ="row">
+{% if items %}
+	<table class="table">
+		<tr>
+			<th scope="col"></th>
+			<th scope="col">Product</th>
+			<th scope="col">Price</th>
+			<th scope="col">Description</th>
+			<th scope="col"></th>
+		</tr>
+		{% for item in items reversed %}
+		<tbody>
+			<tr>
+				<td><img class="Product-Image" src="{{item.image}}" width="170" height="135"> </td>
+				<td><a href="{% url 'product-detail' item.listing_id sponsor_company %}">{{ item.title }}</a></td>
+				<td>{{ item.price }}</td>
+				<td>{{ item.description }}</td>
+				<td>
+					<form action="{% url 'driver-product-home' products_per_page current_page_number sponsor_company %}" method="post">
+						{% csrf_token %}
+						<button id="product-chosen" type="submit" name="product-chosen" value="{{ item.listing_id }}" class="btn btn-success">Add to Cart</button>
+					</form>
+				</td>
+			</tr>
+		</tbody>
+		{% endfor %}
+	</table>
+	{% else %}
+	<p class="text-secondary">No Products To Display</p>
+	{% endif %}
+    </div>
+{% if paginated %}
+	{% if previous %}
+		<a class="btn btn-outline-info mb-4" href="{% url 'driver-product-home' products_per_page previous_page_number sponsor_company %}">Previous</a>
+	{%endif%}
+	{% if next %}
+		<a class="btn btn-outline-info mb-4" href="{% url 'driver-product-home' products_per_page next_page_number sponsor_company %}">Next</a>
+	{%endif%}
+{%endif%}
+{% endblock content %}

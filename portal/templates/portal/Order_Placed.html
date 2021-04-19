@@ -1,0 +1,31 @@
+{% extends "portal/base_driver.html" %}
+{% block content %}
+<div class="row">
+		<div class="col-md-12">
+			<h1></h1>
+		</div>
+</div>
+{%if oop%}
+<div class="row">
+		<div class="col-md-12">
+			<h1>Insufficient points. Please return to the cart and remove an item.</h1>
+		</div>
+</div>
+{%else%}
+<div class="row">
+	{% if wasOverride %}
+		<div class="col-md-12">
+			<h1>Override Order Placed Successfully</h1>
+		</div>
+	{% else %}
+		<div class="col-md-12">
+			<h1>Order Placed Successfully</h1>
+		</div>
+	{% endif %}
+	<form action="{% url 'Order-History' 1 %}" method="post">
+		{% csrf_token %}
+		<button id="product-chosen" type="submit" name="product-chosen" value="bruh" class="btn btn-success">Go to Orders</button>
+	</form>
+</div>
+	{% endif %}
+{% endblock content%}

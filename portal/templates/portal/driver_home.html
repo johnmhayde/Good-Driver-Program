@@ -1,4 +1,4 @@
-{% extends "portal/base.html" %}
+{% extends "portal/base_driver.html" %}
 {% load static %}
 {% block content %}
 	<div class="row">
@@ -8,23 +8,51 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
+			{% if realDriver %}
+				<h2 class="account-heading">Welcome, {{ first_name }} {{ last_name }}</h2>
+			{% else %}
+				<h2 class="account-heading">Viewing as {{ first_name }} {{ last_name }}</h2>
+				<form action="{% url 'driver-home' %}" method="POST">
+					{% csrf_token %}
+					<button type="submit" name="driver_username" value="{{ driver.username }}" class="btn btn-success">Stop Viewing as Driver</button>
+				</form>
+			{% endif %}
 			<div class="content-section">
 				<div class="media-body">
 					<img class="rounded-circle account-img" width="70%" height="auto" src="{{ profile_photo }}">
-					<p class="text-secondary">{{ user.username }}</p>
-					<p class="text-secondary">{{ user.email }}</p>
+					<p class="text-secondary">{{ driver.username }}</p>
+					<p class="text-secondary">{{ driver.email }}</p>
 					<p class="text-secondary">{{ phone_num }}</p>
 					<p class="text-secondary">{{ address }}</p>
 					<a href="{% url 'update-info' %}">Edit Profile Information</a>
 				</div>
 			</div>
-			<div class="content-section">
-				<div class="media-heading">
-					<h5 class="text-secondary">Current Point Balance: {{ points }} points</h5>
-				</div>
+		</div>
+		<div class="col-md-6 content-section">
+			<div class="media-heading">
+				<h4 class="text-secondary">Current Point Balances Per Sponsor</h4>
+				{% if sponsor_list %}
+				<table class="table">
+					<tr>
+						<th scope="col">Sponsor Company</th>
+						<th scope="col">Point Total</th>
+					</tr>
+					{% for sponsor in sponsor_list %}
+						<tbody>
+							<tr>
+								<td>{{ sponsor.sponsor_company }}</td>
+								<td>{{ sponsor.driver_points }}</td>
+							</tr>
+						</tbody>
+					{% endfor %}
+				</table>
+				{% else %}
+					<p>No sponsor point balances to display</p>
+				{% endif %}
 			</div>
 		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-6">
 			<h2 class="media-heading d-flex justify-content-center">Point History</h2>
 			{% if point_hist %}
@@ -32,6 +60,7 @@
 					<tr>
 						<th scope="col">Point Amount</th>
 						<th scope="col">Date</th>
+						<th scope="col">Sponsor Company</th>
 						<th scope="col">Reason</th>
 					</tr>
 					{% for item in point_hist reversed %}
@@ -39,6 +68,7 @@
 							<tr>
 								<td>{{ item.points }}</td>
 								<td>{{ item.date }}</td>
+								<td>{{ item.sponsor_company }}</td>
 								<td>{{ item.reason }}</td>
 							</tr>
 						</tbody>
@@ -56,6 +86,7 @@
 						<th scope="col">Sponsor</th>
 						<th scope="col">Date</th>
 						<th scope="col">Status</th>
+						<th scope="col">Reason</th>
 					</tr>
 					{% for item in applications reversed %}
 						<tbody>
@@ -63,6 +94,7 @@
 								<td>{{ item.sponsor_company }}</td>
 								<td>{{ item.date }}</td>
 								<td>{{ item.status }}</td>
+								<td>{{ item.reason }}</td>
 							</tr>
 						</tbody>
 					{% endfor %}
