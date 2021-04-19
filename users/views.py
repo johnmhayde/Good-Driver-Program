@@ -56,6 +56,33 @@ def register_sponsor(request):
 		form = SponsorRegistrationForm()
 	return render(request, 'users/register.html', {'form': form})
 
+def register_sponsor_P2P(request):
+	if request.method == 'POST':
+		form = SponsorRegistrationForm(request.POST)
+		if form.is_valid():
+			# save user info to GenericUser table
+			new_user = GenericUser(
+			username = form.cleaned_data.get('username'),
+			password = form.cleaned_data.get('password'),
+			type = "Sponsor"
+			)
+			new_user.save()
+			# save user info to Driver table
+			#form['sponsor_company']=(Sponsor.objects.get(username=request.user.username).sponsor_company)
+			form.save()
+			new_sponsor = Sponsor.objects.get(username=form.cleaned_data.get('username'))
+			new_sponsor.sponsor_company = Sponsor.objects.get(username=request.user.username).sponsor_company
+			new_sponsor.save()
+			# register info with user table and log them in
+			user = User.objects.create_user(form.cleaned_data.get('username'), form.cleaned_data.get('email'), form.cleaned_data.get('password'))
+			#login(request, user)
+			username = form.cleaned_data.get('username')
+			messages.success(request, f'Account created for {username}')
+			return redirect('sponsor-home')
+	else:
+		form = SponsorRegistrationForm()
+	return render(request, 'users/register.html', {'form': form})
+
 # view for editing driver profile information
 def update_driver_info(request):
 	if request.method == 'POST':
@@ -110,7 +137,11 @@ def update_driver_points_rate(request):
 	if request.method == 'POST':
 		driver_points_form = EditPointsRateForm(request.POST, instance=driver)
 		if driver_points_form.is_valid():
+<<<<<<< HEAD
 			## update drive points in sponsorships
+=======
+			## update driver points rate in sponsorships
+>>>>>>> 58a00590d45aaeb8147f8557a1eb5fe0063e4fd8
 			sponsorship = Sponsorship.objects.get(driver = request.POST.get("driver_username"), sponsor_company=Sponsor.objects.get(username=request.user.username).sponsor_company)
 			#sponsorship.driver_points += points
 			sponsorship.price_scalar = driver_points_form.cleaned_data.get('price_scalar')
@@ -144,7 +175,12 @@ def update_sponsor_info(request):
 	return render(request, 'users/edit_sponsor_info.html', context)
 
 def application(request):
+<<<<<<< HEAD
 	driver = driverGet(request.user)
+=======
+	driver=driverGet(request.user)
+
+>>>>>>> 58a00590d45aaeb8147f8557a1eb5fe0063e4fd8
 	application = ''
 	application = request.POST.get('application')
 
