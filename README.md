@@ -1,5 +1,12 @@
 # Good Driver Program - Django Setup
 
+Note - this project was developed for a school project with a team of 5 group members. Their names are listed below:
+- John Michael Hayde
+- Timothy Morse
+- Jason Lyle
+- Jacobn Caldwell
+- Colin Rogers
+
 ## Installation
 Must install Django
 
